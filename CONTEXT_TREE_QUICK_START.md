@@ -4,6 +4,18 @@
 
 ---
 
+## Installation
+
+From your project root directory:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install.sh | bash
+```
+
+This downloads 4 files to your project root. After building your context tree, you can delete the builder files and keep only `CONTEXT_TREE_PRINCIPLES.md` for maintenance.
+
+---
+
 ## What You'll Create
 
 A **context tree** - structured documentation that lives in your codebase:
@@ -25,20 +37,19 @@ A **context tree** - structured documentation that lives in your codebase:
 
 ---
 
-## Quick Start: Three Commands
+## Quick Start: Build Your Context Tree
 
 ### Option 1: Guided Session (Recommended)
 
-Open Claude Code in your project directory:
+Start Claude Code in your project directory:
 
 ```bash
-cd /path/to/your/project
-claude code
+claude
 ```
 
 Then say:
 ```
-Help me build a context tree using docs/CONTEXT_TREE_BUILDER.md
+Help me build a context tree using CONTEXT_TREE_BUILDER.md
 ```
 
 Claude will:
@@ -234,11 +245,19 @@ A: Start with one module/service. Context trees work well from 50 to 5000+ files
 
 ## Next Steps After Initial Creation
 
-1. **Share with team** - Get feedback, identify gaps
-2. **Use it** - Real tasks reveal what's missing
-3. **Refine** - Add subdirectory CLAUDE.md files as needed
-4. **Maintain** - Update alongside code changes
-5. **Expand** - Apply to other codebases
+1. **Clean up** - Delete builder files (keep CONTEXT_TREE_PRINCIPLES.md for maintenance)
+2. **Share with team** - Get feedback, identify gaps
+3. **Use it** - Real tasks reveal what's missing
+4. **Refine** - Add subdirectory CLAUDE.md files as needed
+5. **Maintain** - Update alongside code changes
+6. **Expand** - Apply to other codebases
+
+**Files to delete after building:**
+```bash
+rm CONTEXT_TREE_QUICK_START.md CONTEXT_TREE_BUILDER.md CONTEXT_TREE_DISCOVERY.md
+```
+
+**File to keep:** `CONTEXT_TREE_PRINCIPLES.md` - reference for maintaining your context tree
 
 ---
 
