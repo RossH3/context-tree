@@ -22,7 +22,7 @@ echo "║        Context Tree - Advanced Installation                ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 echo "This installs to: $(pwd)/.claude/"
-echo "  ✓ Context tree maintenance skill → .claude/skills/documentation/"
+echo "  ✓ Context tree maintenance skill → .claude/skills/context-tree-maintenance/"
 echo "  ✓ Slash commands → .claude/commands/"
 echo "  ✓ Session hooks → .claude/hooks/"
 echo ""
@@ -104,14 +104,15 @@ fi
 
 # Create directory structure
 echo "Creating directory structure..."
-mkdir -p .claude/skills/documentation
+mkdir -p .claude/skills/context-tree-maintenance
 mkdir -p .claude/commands
 mkdir -p .claude/hooks
 
 # Install skill
 echo ""
 echo "Installing skill..."
-install_file "skills/documentation/context-tree-maintenance.md" ".claude/skills/documentation/context-tree-maintenance.md" || exit 1
+install_file "skills/context-tree-maintenance/SKILL.md" ".claude/skills/context-tree-maintenance/SKILL.md" || exit 1
+install_file "skills/context-tree-maintenance/discovery-commands.md" ".claude/skills/context-tree-maintenance/discovery-commands.md" || exit 1
 
 # Install commands
 echo ""
@@ -131,8 +132,10 @@ echo "✅ Installation Complete!"
 echo ""
 
 # Calculate sizes
-SKILL_LINES=$(wc -l < ".claude/skills/documentation/context-tree-maintenance.md" | tr -d ' ')
-echo "   Skill: $SKILL_LINES lines"
+SKILL_LINES=$(wc -l < ".claude/skills/context-tree-maintenance/SKILL.md" | tr -d ' ')
+COMMANDS_LINES=$(wc -l < ".claude/skills/context-tree-maintenance/discovery-commands.md" | tr -d ' ')
+echo "   Skill: $SKILL_LINES lines (SKILL.md)"
+echo "   Supporting files: $COMMANDS_LINES lines (discovery-commands.md)"
 echo "   Location: $(pwd)/.claude/"
 echo ""
 
@@ -147,8 +150,9 @@ echo "  /audit-context       - Full validation workflow"
 echo "  /discover-codebase   - Automated codebase discovery"
 echo "  /capture-insight     - Quick insight capture"
 echo ""
-echo "Or invoke the skill directly:"
-echo '  "Use the context-tree-maintenance skill to audit the docs"'
+echo "Claude will automatically use the skill when relevant."
+echo "You can also invoke it explicitly:"
+echo '  "Use the Context Tree Maintenance skill to audit the docs"'
 echo ""
 
 if [ "$LOCAL_MODE" = true ]; then
@@ -163,5 +167,5 @@ echo "🔄 Uninstalling"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "To uninstall:"
-echo "  rm -rf .claude/skills .claude/commands .claude/hooks"
+echo "  rm -rf .claude/skills/context-tree-maintenance .claude/commands .claude/hooks"
 echo ""

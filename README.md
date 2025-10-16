@@ -53,7 +53,9 @@ bash /path/to/context-tree/install-advanced.sh --local
 ```
 
 **What you get:**
-- ✓ **Context tree maintenance skill** → `.claude/skills/documentation/`
+- ✓ **Context Tree Maintenance skill** → `.claude/skills/context-tree-maintenance/`
+  - Uses official Claude Skills format (SKILL.md with YAML frontmatter)
+  - Automatic discovery - Claude loads it when relevant
   - Systematic methodology for building and maintaining context trees
   - Validation checklists and quality controls
   - Integrated automated discovery commands
@@ -62,8 +64,7 @@ bash /path/to/context-tree/install-advanced.sh --local
   - `/discover-codebase` - Automated discovery
   - `/capture-insight` - Quick insight capture
 - ✓ **Session hooks** → `.claude/hooks/`
-  - Auto-inject skill context at session start
-  - Proactive skill suggestions
+  - Announces available skills at session start
 
 **Usage:**
 ```bash
@@ -75,7 +76,9 @@ claude
 /capture-insight
 
 # Or invoke the skill directly:
-"Use the context-tree-maintenance skill"
+"Use the Context Tree Maintenance skill"
+
+# Claude will also automatically use the skill when relevant!
 ```
 
 **Learn more:** See [skills/README.md](skills/README.md) for details on how skills work
@@ -148,7 +151,7 @@ claude
    ```
    Or:
    ```
-   Use the context-tree-maintenance skill to build a context tree
+   Use the Context Tree Maintenance skill to build a context tree
    ```
 
 4. **Skill guides you through** systematic workflow with quality checks

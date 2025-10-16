@@ -2,19 +2,22 @@
 
 ## What Are Skills?
 
-Skills are reusable methodology documents that guide AI assistants (like Claude Code) through specific workflows. They're markdown files containing:
+Skills are specialized capabilities that extend Claude's effectiveness through organized instructions and resources. Context-tree uses the **official Claude Skills format** introduced in Claude Code 2.0.20.
 
-- **Clear principles** - Fundamental rules and guardrails
-- **Step-by-step workflows** - Systematic approaches to tasks
-- **Validation checklists** - How to verify work quality
-- **Authoritative tone** - Strong imperatives (NEVER, MUST, STOP)
-- **Commitment devices** - Announcements that enforce discipline
+**Claude Skills format:**
+- **SKILL.md** with YAML frontmatter (name, description)
+- **Automatic discovery** - Claude loads skills when relevant based on description
+- **Portable** - Works across Claude Code, Claude web, and API
+- **Composable** - Multiple skills work together seamlessly
+- **Progressive disclosure** - Keep SKILL.md under 500 lines, use supporting files for details
 
-Think of skills as **executable best practices** that an AI can follow consistently across projects.
+Think of skills as **executable best practices** that Claude follows consistently across projects.
 
 ## Available Skills
 
-### context-tree-maintenance.md
+### Context Tree Maintenance
+
+**Location**: `skills/context-tree-maintenance/SKILL.md`
 
 **Purpose**: Build, maintain, audit, and validate context trees for brownfield codebases
 
@@ -33,7 +36,8 @@ Think of skills as **executable best practices** that an AI can follow consisten
 - `/capture-insight` - Quick insight capture
 
 **Key features**:
-- Detailed discovery commands for tech stack analysis
+- Claude Skills format with automatic discovery
+- SKILL.md (377 lines) + discovery-commands.md reference file
 - "Common Rationalizations" section to prevent shortcuts
 - Commitment devices for verification discipline
 - Validation checklists for quality control
@@ -41,33 +45,45 @@ Think of skills as **executable best practices** that an AI can follow consisten
 
 ## How Skills Work
 
-### Structure
+### File Structure
 
-Skills follow a consistent structure:
+**Claude Skills format:**
+```
+skills/context-tree-maintenance/
+├── SKILL.md                    # Main skill file (377 lines)
+│   ├── YAML frontmatter (name, description)
+│   ├── Overview
+│   ├── Critical Principles
+│   ├── Common Rationalizations
+│   ├── Workflows (Building, Capturing, Validating)
+│   ├── Maintenance Patterns
+│   └── Verification Checklist
+└── discovery-commands.md       # Supporting file for bash commands
+```
 
-1. **Overview** - What the skill does
-2. **When to Use** - Trigger conditions
-3. **Critical Principles** - Non-negotiable guardrails
-4. **Common Rationalizations** - Traps to avoid
-5. **Workflows** - Step-by-step processes
-6. **Validation** - How to verify quality
-7. **Summary** - Key takeaways
+**Key characteristics:**
+- SKILL.md under 500 lines (best practice)
+- Progressive disclosure via supporting files
+- Automatic discovery via description field
+- Clear YAML frontmatter for Claude Code
 
 ### Usage
 
+**Automatic discovery** (Claude Skills):
+- Claude automatically loads the skill when working on context tree tasks
+- Based on description keywords: "context tree", "documentation", "audit", etc.
+
 **Manual invocation**:
 ```
-Claude, use the context-tree-maintenance skill to audit the docs
+Claude, use the Context Tree Maintenance skill to audit the docs
 ```
 
-**Slash command** (if installed):
+**Slash commands** (if installed):
 ```
 /audit-context
+/discover-codebase
+/capture-insight
 ```
-
-**Automatic** (with session hook):
-- Skill context injected at session start
-- Claude proactively suggests skills when relevant
 
 ## Enhancing Skills
 
@@ -214,7 +230,7 @@ bash /path/to/context-tree/install-advanced.sh --local
 ```
 
 This installs:
-- Skill → `.claude/skills/documentation/`
+- Skill → `.claude/skills/context-tree-maintenance/` (SKILL.md + discovery-commands.md)
 - Commands → `.claude/commands/`
 - Hooks → `.claude/hooks/`
 
@@ -240,7 +256,7 @@ Skills should be version controlled alongside your code (if project-specific) or
 
 Track changes to skills like code:
 ```bash
-git add .claude/skills/documentation/context-tree-maintenance.md
+git add .claude/skills/context-tree-maintenance/SKILL.md
 git commit -m "Add pressure testing validation step to skill"
 ```
 
@@ -267,6 +283,8 @@ To contribute improvements to context-tree skills:
 ## Resources
 
 - **Context Tree Repo**: https://github.com/RossH3/context-tree
+- **Claude Skills Documentation**: https://docs.claude.com/en/docs/claude-code/skills
+- **Claude Skills Best Practices**: https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices
 - **Superpowers** (Jesse Vincent's skills system): https://github.com/obra/superpowers
 - **Persuasion Principles**: Robert Cialdini's research on commitment, authority, consistency
 

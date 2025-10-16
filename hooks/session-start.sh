@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ABOUTME: Session start hook for Claude Code
-# ABOUTME: Discovers and injects context-tree skills from project-local .claude/ directory
+# ABOUTME: Lists available Claude Skills and slash commands in project
 
 # Find project root by searching upward for .claude directory
 find_project_root() {
@@ -27,47 +27,40 @@ if [ -z "$PROJECT_ROOT" ]; then
 fi
 
 SKILLS_DIR="$PROJECT_ROOT/.claude/skills"
+COMMANDS_DIR="$PROJECT_ROOT/.claude/commands"
 
-# Build skills context message
-SKILLS_CONTEXT=""
+# Build message
+MESSAGE=""
 
-if [ -d "$SKILLS_DIR/documentation" ]; then
-  SKILLS_CONTEXT+="You have context-tree maintenance skills available:\\n\\n"
-
-  if [ -f "$SKILLS_DIR/documentation/context-tree-maintenance.md" ]; then
-    SKILLS_CONTEXT+="📋 **context-tree-maintenance.md**\\n"
-    SKILLS_CONTEXT+="   Location: .claude/skills/documentation/context-tree-maintenance.md\\n"
-    SKILLS_CONTEXT+="   Purpose: Build, maintain, audit, and validate context trees\\n\\n"
-    SKILLS_CONTEXT+="   Use when:\\n"
-    SKILLS_CONTEXT+="   - Building initial context tree for a codebase\\n"
-    SKILLS_CONTEXT+="   - Auditing documentation for signal-to-noise ratio\\n"
-    SKILLS_CONTEXT+="   - Capturing insights during development\\n"
-    SKILLS_CONTEXT+="   - Validating architectural claims against code\\n"
-    SKILLS_CONTEXT+="   - Monthly maintenance checks\\n"
-    SKILLS_CONTEXT+="   - Removing outdated or low-value content\\n"
-    SKILLS_CONTEXT+="   - Running automated codebase discovery\\n\\n"
-    SKILLS_CONTEXT+="   Slash commands (if installed in project):\\n"
-    SKILLS_CONTEXT+="   - /audit-context - Full validation workflow\\n"
-    SKILLS_CONTEXT+="   - /discover-codebase - Automated discovery only\\n"
-    SKILLS_CONTEXT+="   - /capture-insight - Quick insight capture\\n\\n"
-  fi
-
-  SKILLS_CONTEXT+="**Proactive Usage Guidelines:**\\n"
-  SKILLS_CONTEXT+="- When Ross discusses context tree or documentation, suggest using the skill\\n"
-  SKILLS_CONTEXT+="- When validating architecture, reference the skill's verification checklist\\n"
-  SKILLS_CONTEXT+="- When capturing insights, follow the skill's 'where to add' guidance\\n"
-  SKILLS_CONTEXT+="- Watch for 'Common Rationalizations' - stop them immediately\\n"
-  SKILLS_CONTEXT+="- Use commitment devices: Announce 'I'm verifying [claim] at [file:line]'\\n"
-  SKILLS_CONTEXT+="- NEVER document without verifying against code first\\n"
+# Check for skills (Claude will auto-discover via SKILL.md)
+if [ -d "$SKILLS_DIR/context-tree-maintenance" ] && [ -f "$SKILLS_DIR/context-tree-maintenance/SKILL.md" ]; then
+  MESSAGE+="📋 **Context Tree Maintenance** skill is available\\n"
+  MESSAGE+="   Claude will automatically use it when relevant.\\n\\n"
 fi
 
-# Output JSON for Claude Code
-# Use python for reliable JSON escaping
-ESCAPED_CONTEXT=$(echo -e "$SKILLS_CONTEXT" | python3 -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+# List available slash commands
+if [ -d "$COMMANDS_DIR" ]; then
+  COMMAND_COUNT=$(find "$COMMANDS_DIR" -name "*.md" -type f | wc -l | tr -d ' ')
+  if [ "$COMMAND_COUNT" -gt 0 ]; then
+    MESSAGE+="**Available slash commands:**\\n"
+    for cmd_file in "$COMMANDS_DIR"/*.md; do
+      if [ -f "$cmd_file" ]; then
+        cmd_name=$(basename "$cmd_file" .md)
+        MESSAGE+="   - /$cmd_name\\n"
+      fi
+    done
+  fi
+fi
 
-cat <<EOF
+# Output JSON for Claude Code if there's a message
+if [ -n "$MESSAGE" ]; then
+  # Use python for reliable JSON escaping
+  ESCAPED_MESSAGE=$(echo -e "$MESSAGE" | python3 -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+
+  cat <<EOF
 {
   "event": "session-start",
-  "context": $ESCAPED_CONTEXT
+  "context": $ESCAPED_MESSAGE
 }
 EOF
+fi
