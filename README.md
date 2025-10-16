@@ -1,8 +1,10 @@
 # Context Tree
 
-AI-optimized documentation structure for brownfield codebases. Build structured context trees that help Claude Code (and developers) understand your legacy projects.
+Collaborative documentation structure for brownfield codebases. Developers and Claude Code work together to build structured context trees that maximize AI assistant effectiveness (#1) and serve as navigable documentation for humans (#2).
 
 **What you'll create:** Root `CLAUDE.md` with decision trees, reference docs (GLOSSARY.md, ARCHITECTURE.md, BUSINESS_CONTEXT.md), and hierarchical subdirectory navigation - all maintained in git alongside your code.
+
+**Critical: Human-in-the-loop.** Context trees are NOT AI-generated documentation dumps. They are collaboratively built and curated by developers working with AI assistants, with systematic maintenance to combat "evolutionary documentation debt."
 
 **Best for:** Existing production codebases (50-5000+ files) with limited documentation, active development teams using AI assistants.
 
