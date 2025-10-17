@@ -2,17 +2,17 @@
 
 ## Overview
 
-This document teaches how to build and maintain a **context tree** - a structured documentation system engineered to maximize AI assistant effectiveness when working with codebases, particularly brownfield projects (existing production code with limited documentation). A conference management SaaS application serves as the reference implementation and testing ground for these patterns.
+Build and maintain a **context tree** - structured documentation that maximizes AI assistant effectiveness on codebases, particularly brownfield projects (existing production code with limited documentation). A conference management SaaS application serves as the reference implementation.
 
 **Audience:** AI assistants (primary), senior developers and architects (secondary)
 
 ## What is the Context Tree?
 
-The **context tree** is a structured documentation architecture built on **hierarchical CLAUDE.md files** that provide decision-tree-like guidance for AI assistants and developers. It connects business domain knowledge, technical architecture, and implementation patterns in a way that mirrors how developers actually need to access information.
+A structured documentation architecture built on **hierarchical CLAUDE.md files** that provide decision-tree guidance for AI assistants and developers. It connects business domain knowledge, technical architecture, and implementation patterns to mirror how developers access information.
 
 ## Hierarchical CLAUDE.md Pattern
 
-Following Anthropic's recommended approach, the context tree uses **CLAUDE.md files at each directory level** for predictable navigation:
+Following Anthropic's recommended approach, the context tree uses **CLAUDE.md files at each directory level**:
 
 ```
 /CLAUDE.md                     # Root: Project-wide navigation, critical patterns, AI guidance
@@ -42,7 +42,7 @@ Following Anthropic's recommended approach, the context tree uses **CLAUDE.md fi
 
 ## Root CLAUDE.md
 
-The root CLAUDE.md serves as the primary entry point and provides:
+Root CLAUDE.md provides:
 
 - **Quick Start checklists** for new developers
 - **Decision tree navigation** for common scenarios
@@ -82,7 +82,7 @@ The root CLAUDE.md serves as the primary entry point and provides:
 
 ## Documentation Structure
 
-**Note:** The file listings below show a conference management project's implementation as a concrete example of the context tree pattern. Other projects will have different specific files based on their architecture and needs, but should follow the same organizational patterns.
+**Note:** The file listings below show a conference management project's implementation as a concrete example. Other projects will have different files based on architecture and needs, but should follow the same organizational patterns.
 
 ### 1. Hierarchical Navigation (CLAUDE.md files)
 ```
@@ -94,7 +94,7 @@ app/views/CLAUDE.md            → Template patterns and view helpers
 config/CLAUDE.md               → Configuration guide and settings
 ```
 
-**Purpose:** Consistent, predictable navigation at each directory level. See [Hierarchical CLAUDE.md Pattern](#hierarchical-claudemd-pattern) above for detailed explanation.
+**Purpose:** Consistent, predictable navigation at each directory level. See [Hierarchical CLAUDE.md Pattern](#hierarchical-claudemd-pattern) above.
 
 ### 2. Detailed Reference Documentation (docs/)
 
@@ -140,39 +140,37 @@ docs/UTILITIES.md              → Utility libraries reference
 ## Design Principles
 
 ### 1. Hierarchical CLAUDE.md Pattern
-The hierarchical CLAUDE.md pattern (detailed in [Hierarchical CLAUDE.md Pattern](#hierarchical-claudemd-pattern) section) is the cornerstone of the context tree architecture, enabling predictable navigation, scoped context, and token-efficient AI assistance.
+The hierarchical CLAUDE.md pattern (detailed in [Hierarchical CLAUDE.md Pattern](#hierarchical-claudemd-pattern) section) is the cornerstone of context tree architecture, enabling predictable navigation, scoped context, and token-efficient AI assistance.
 
-### 2. "Flexible Content, Consistent Navigation"
-Balancing adaptability with usability:
+### 2. Flexible Content, Consistent Navigation
 - **Content flexibility** - Teams write context in their voice, adapting to codebase needs
 - **Navigation consistency** - Predictable CLAUDE.md discovery pattern across all directories
 - **Dual purpose** - CLAUDE.md files serve both humans and AI assistants
 - **AI optimization** - Structure designed for Claude Code's automatic loading
 
 ### 3. Two-Tier Documentation Model
-Clear separation between navigation and reference:
 - **CLAUDE.md files** - Navigation hubs with quick reference, patterns, and decision trees
 - **Detailed .md files** - Comprehensive reference materials with descriptive names
 - **Benefit** - Consistent AI navigation + human-browsable reference docs
 - **Prevents** - Information overload from massive single files
 
 ### 4. Decision Tree Navigation
-Rather than forcing users to read entire documents, the documentation provides decision tree navigation:
+Documentation provides decision tree navigation:
 - **Debugging something broken?** → Specific diagnosis paths
 - **Building a feature?** → Implementation guidance paths
 - **Understanding the system?** → Learning sequence paths
 
 ### 5. Just-in-Time Information
-Each document is designed to be consumed when needed, with clear purposes:
+Consume documents when needed, with clear purposes:
 - **When to Read** columns in CLAUDE.md documentation maps
 - **Specific problem → Specific document** routing via decision trees
 - **Cross-references** between related concepts and hierarchy levels
 
 ### 6. Business-Technical Integration
-Technical documentation is grounded in business context:
-- Controllers are organized by business domain, not alphabetically
+Technical documentation includes business context:
+- Controllers organized by business domain, not alphabetically
 - API documentation includes business purpose
-- Code patterns explain the business reasoning
+- Code patterns explain business reasoning
 
 ### 7. Hard vs Soft Context Separation
 Context trees focus on semantic meaning that complements structural analysis:
@@ -183,7 +181,6 @@ Context trees focus on semantic meaning that complements structural analysis:
 - **Principle**: Capture what cannot be automatically extracted from code structure
 
 ### 8. AI-Optimized Structure
-The tree structure optimizes for AI assistant effectiveness:
 - **Predictable file locations** - Always check for CLAUDE.md first
 - **Rich cross-referencing** - Links between hierarchy levels and reference docs
 - **Consistent formatting** - Similar section structures across all CLAUDE.md files
@@ -192,14 +189,14 @@ The tree structure optimizes for AI assistant effectiveness:
 ## Content Principles
 
 ### Keep the Meat, Throw Away the Bones
-The context tree prioritizes **token efficiency and signal-to-noise ratio**:
+Prioritize **token efficiency and signal-to-noise ratio**:
 - **Keep**: Essential patterns, gotchas, business context, architectural decisions
 - **Remove**: Verbose explanations, repetitive examples, information derivable from code
 - **Principle**: Every line must justify its token cost
 - **Why**: AI assistants have token limits; maximize value per token consumed
 
 ### Single Source of Truth for Architectural Facts
-Architectural facts must have **one authoritative location** to prevent documentation drift:
+Architectural facts have **one authoritative location** to prevent documentation drift:
 - **Core architecture** → `docs/ARCHITECTURE.md`
 - **Technology stack versions** → `docs/ARCHITECTURE.md`
 - **Data storage patterns** → `docs/ARCHITECTURE.md` (high-level) + `docs/PAYMENTS_STORAGE.md` (implementation)
@@ -209,23 +206,23 @@ Architectural facts must have **one authoritative location** to prevent document
 **Example**: "MySQL = Primary Storage, Elasticsearch = Query Engine" lives in ARCHITECTURE.md; other docs link to it
 
 ### Bad Context is Worse Than Bad Code
-Outdated or incorrect documentation actively misleads:
+Outdated or incorrect documentation misleads:
 - **Bad code**: Can be debugged, identified through testing, fixed incrementally
 - **Bad context**: Silently trains AI assistants incorrectly, compounds errors, erodes trust
 - **Maintenance priority**: Context tree maintenance is as critical as code maintenance
 - **Validation**: Cross-check facts when updating; fix inconsistencies immediately
 
 ### Verify Architectural Claims Against Code
-Documentation can propagate incorrect architectural descriptions if not regularly validated:
+Documentation propagates incorrect architecture without validation:
 - **Anti-pattern**: Documenting based on other documentation without code verification
 - **Risk**: Architectural misunderstandings spread across multiple files, compounding misinformation
-- **Best practice**: When documenting architecture, verify claims against actual code implementation
-- **Example lesson**: A configuration system was incorrectly documented as a three-layer hierarchy (System → App → Org) when the actual implementation was two-layer (Static + Per-Organization with multiple types)
+- **Best practice**: Verify claims against actual code implementation
+- **Example lesson**: A configuration system was incorrectly documented as a three-layer hierarchy (System → App → Org) when actual implementation was two-layer (Static + Per-Organization with multiple types)
 - **Detection**: Look for inconsistencies between documentation claims and actual API calls in code
 - **Remedy**: When correcting architectural documentation, search entire context tree for propagated errors
 
 ### Work in Progress
-The context tree is **actively evolving**:
+The context tree **evolves**:
 - We're still learning optimal patterns for AI-assisted coding
 - Maintenance strategies will evolve (likely automated review hooks)
 - Be selective and deliberate when adding new guidance
@@ -235,7 +232,7 @@ The context tree is **actively evolving**:
 
 ### Integrated Context Tree Model
 
-The context tree is **actively maintained within the main codebase**, living alongside production code on feature branches. The hierarchical CLAUDE.md pattern and focused reference files naturally minimize merge conflicts - changes to `app/controllers/CLAUDE.md` don't conflict with `app/views/CLAUDE.md`, and different developers typically work on different domain areas.
+The context tree lives in the main codebase alongside production code on feature branches. Hierarchical CLAUDE.md pattern and focused reference files minimize merge conflicts - changes to `app/controllers/CLAUDE.md` don't conflict with `app/views/CLAUDE.md`, and developers typically work on different domain areas.
 
 **Development Workflow:**
 1. Update context tree on your feature branch alongside code changes
@@ -253,7 +250,7 @@ The context tree is **actively maintained within the main codebase**, living alo
 5. **Merge with code** - Documentation updates merge alongside code changes
 
 ### Updating Existing Documentation
-1. **Edit on feature branch** - Context tree updates are straightforward to merge due to hierarchical structure
+1. **Edit on feature branch** - Context tree updates merge easily due to hierarchical structure
 2. **Maintain alignment** - Keep business and technical contexts synchronized
 3. **Validate references** - Update cross-references when moving or restructuring content
 4. **Test links** - Verify all CLAUDE.md links resolve correctly
@@ -269,16 +266,16 @@ The context tree is **actively maintained within the main codebase**, living alo
 ## Usage
 
 ### For Developers
-Developers use CLAUDE.md as the primary entry point for all documentation navigation and follow the decision trees relevant to their task.
+Use CLAUDE.md for documentation navigation and follow decision trees relevant to your task.
 
 ### For AI Assistants
 
 **Hierarchical Loading Strategy:**
 
-Claude Code automatically loads the root `CLAUDE.md`, providing immediate access to navigation and critical patterns. From there, load context hierarchically based on your focus:
+Claude Code automatically loads root `CLAUDE.md`. From there, load context hierarchically based on your focus:
 
 - **Root CLAUDE.md** - Auto-loaded by Claude Code
-  - Provides project-wide patterns, decision trees, and navigation map
+  - Project-wide patterns, decision trees, and navigation map
   - Use decision trees for task-specific routing
   - Reference point for all documentation discovery
 
@@ -286,14 +283,14 @@ Claude Code automatically loads the root `CLAUDE.md`, providing immediate access
   - Working on controllers? → Load `app/controllers/CLAUDE.md`
   - Need docs guidance? → Load `docs/CLAUDE.md`
   - Configuring system? → Load `config/CLAUDE.md`
-  - Provides scoped, focused context without token overhead
+  - Scoped, focused context without token overhead
 
 - **Reference .md files** - Load as needed for detailed information
   - Follow cross-references from CLAUDE.md files
   - Comprehensive data for specific domains
   - Load only when decision trees or CLAUDE.md files indicate relevance
 
-**Key Advantage:** Hierarchical structure matches how AI assistants naturally work through problems - start broad (root), focus as needed (subdirectories), dive deep when required (references).
+**Key Advantage:** Hierarchical structure matches how AI assistants work through problems - start broad (root), focus as needed (subdirectories), dive deep when required (references).
 
 ### For New Team Members
 Follow the "First Day Checklist" in CLAUDE.md for structured onboarding.

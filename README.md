@@ -1,246 +1,144 @@
 # Context Tree
 
-Collaborative documentation structure for brownfield codebases. Developers and Claude Code work together to build structured context trees that maximize AI assistant effectiveness (#1) and serve as navigable documentation for humans (#2).
+You build a hierarchy of `CLAUDE.md` files for your codebase. Claude Code uses these files to understand your architecture, terminology, and business rules. You work with Claude Code to build them; no script auto-generates them. Expect to invest 2-4 hours initially, plus refinement over 1-2 weeks.
 
-**What you'll create:** Root `CLAUDE.md` with decision trees, reference docs (GLOSSARY.md, ARCHITECTURE.md, BUSINESS_CONTEXT.md), and hierarchical subdirectory navigation - all maintained in git alongside your code.
+**Best for:** Production codebases (50-5000+ files) with limited documentation, teams using AI assistants.
 
-**Critical: Human-in-the-loop.** Context trees are NOT AI-generated documentation dumps. They are collaboratively built and curated by developers working with AI assistants, with systematic maintenance to combat documentation drift as the codebase evolves.
+---
 
-**Best for:** Existing production codebases (50-5000+ files) with limited documentation, active development teams using AI assistants.
+## What This Is NOT
+
+- **Not auto-generated.** You and Claude Code build these files together through interview and validation. No script generates documentation from your code.
+- **Not automatic.** Plan to spend 2-4 hours on initial build, plus ongoing maintenance.
+- **Not for new projects.** Use this on brownfield codebases where AI assistants lack context.
+
+---
+
+## What You Build
+
+- **Root CLAUDE.md** - Navigation hub with decision trees ("What are you trying to do?"), critical patterns, gotchas
+- **Reference docs** (docs/)
+  - GLOSSARY.md - UI ↔ code ↔ database terminology mappings
+  - ARCHITECTURE.md - Tech stack, data patterns, design decisions
+  - BUSINESS_CONTEXT.md - Workflows, entities, business rules
+- **Subdirectory CLAUDE.md files** - Scoped context (app/controllers/CLAUDE.md, app/views/CLAUDE.md)
+- **All in git** - Maintained alongside your code
 
 ---
 
 ## Installation
 
-### Basic Installation (Documentation Guides)
+### Basic (Guides Only)
 
-**Best for:** First-time users, small teams, single project
+Best for: First-time users, single project
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install.sh | bash
 ```
 
-**What you get:**
-- ✓ CONTEXT_TREE_BUILDER.md - Interview guide and templates
-- ✓ CONTEXT_TREE_PRINCIPLES.md - Underlying principles and patterns
-- ✓ CONTEXT_TREE_DISCOVERY.md - Automated analysis commands
-- ✓ CONTEXT_TREE_QUICK_START.md - Getting started guide
-- ✓ Installed in your project root directory
+Downloads four guide files to project root:
+- CONTEXT_TREE_BUILDER.md
+- CONTEXT_TREE_PRINCIPLES.md
+- CONTEXT_TREE_DISCOVERY.md
+- CONTEXT_TREE_QUICK_START.md
 
 **Usage:**
 ```bash
 claude
-# Then tell Claude:
-# "Help me build a context tree using CONTEXT_TREE_BUILDER.md"
+# Tell Claude: "Help me build a context tree using CONTEXT_TREE_BUILDER.md"
 ```
 
-**Time investment:** 2-4 hours for initial context tree, refinement over 1-2 weeks
+### Advanced (Skills + Commands)
 
----
+Best for: Multiple projects, systematic quality enforcement
 
-### Advanced Installation (Skills + Automation)
-
-**Best for:** Experienced users, multiple projects, teams building many context trees
-
-**Installation:**
 ```bash
 cd ~/your-project
 curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-advanced.sh | bash
 ```
 
-**Local testing** (before pushing to GitHub):
-```bash
-cd ~/your-project
-bash /path/to/context-tree/install-advanced.sh --local
-```
-
-**What you get:**
-- ✓ **Context Tree Maintenance skill** → `.claude/skills/context-tree-maintenance/`
-  - Uses official Claude Skills format (SKILL.md with YAML frontmatter)
-  - Automatic discovery - Claude loads it when relevant
-  - Systematic methodology for building and maintaining context trees
-  - Validation checklists and quality controls
-  - Integrated automated discovery commands
-- ✓ **Slash commands** → `.claude/commands/`
-  - `/audit-context` - Full validation workflow
-  - `/discover-codebase` - Automated discovery
-  - `/capture-insight` - Quick insight capture
-- ✓ **Session hooks** → `.claude/hooks/`
-  - Announces available skills at session start
+Installs to `.claude/`:
+- Context Tree Maintenance skill (automatic discovery)
+- Slash commands (`/audit-context`, `/discover-codebase`, `/capture-insight`)
+- Session hooks
 
 **Usage:**
 ```bash
 cd ~/your-project
 claude
-# Use slash commands:
-/audit-context
 /discover-codebase
-/capture-insight
-
-# Or invoke the skill directly:
-"Use the Context Tree Maintenance skill"
-
-# Claude will also automatically use the skill when relevant!
+# Or: "Use the Context Tree Maintenance skill"
 ```
 
-**Learn more:** See [skills/README.md](skills/README.md) for details on how skills work
+### Upgrade Path
+
+Start with Basic. Upgrade anytime:
+```bash
+cd ~/your-project
+curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-advanced.sh | bash
+```
+Your context tree files remain unchanged.
 
 ---
 
-## Comparison: Basic vs Advanced
+## Comparison
 
 | Feature | Basic | Advanced |
 |---------|-------|----------|
-| **Documentation guides** | ✅ Installed per-project | ✅ Skill per-project |
-| **Context tree builder** | ✅ Manual workflow | ✅ Skill-guided workflow |
-| **Reusable across projects** | ❌ Copy files manually | ✅ Simple curl install |
-| **Slash commands** | ❌ Not available | ✅ Included |
-| **Session hooks** | ❌ Not available | ✅ Included |
-| **Validation checklists** | ❌ Manual | ✅ Built into skill |
-| **Quality enforcement** | ❌ Self-discipline | ✅ Guardrails + commitment devices |
-| **Automated discovery** | ✅ Commands in DISCOVERY.md | ✅ Integrated in skill |
-| **Best for** | Single project, learning | Systematic quality, multiple projects |
-
-**Recommendation:**
-- Start with **Basic** if this is your first context tree
-- Upgrade to **Advanced** when building context trees for multiple projects
-- Use **Advanced** if you want systematic quality enforcement
-
----
-
-## Quick Start
-
-### With Basic Installation
-
-1. **Install in your project:**
-   ```bash
-   cd ~/your-project
-   curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install.sh | bash
-   ```
-
-2. **Start Claude:**
-   ```bash
-   claude
-   ```
-
-3. **Build your context tree:**
-   ```
-   Help me build a context tree using CONTEXT_TREE_BUILDER.md
-   ```
-
-4. **Follow the guided interview** - Claude will:
-   - Run automated discovery
-   - Ask targeted questions
-   - Generate context tree files
-   - Help you validate and refine
-
-### With Advanced Installation
-
-1. **Install in your project:**
-   ```bash
-   cd ~/your-project
-   curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-advanced.sh | bash
-   ```
-
-2. **Start Claude:**
-   ```bash
-   claude
-   ```
-
-3. **Start building:**
-   ```
-   /discover-codebase
-   ```
-   Or:
-   ```
-   Use the Context Tree Maintenance skill to build a context tree
-   ```
-
-4. **Skill guides you through** systematic workflow with quality checks
-
----
-
-## What You'll Create
-
-A **context tree** with:
-
-- **Root CLAUDE.md** - Navigation hub with decision trees
-  - "What are you trying to do?" routing
-  - Critical patterns and gotchas
-  - Complete documentation map
-
-- **Reference Documentation** (docs/)
-  - GLOSSARY.md - UI ↔ code ↔ database terminology mappings
-  - ARCHITECTURE.md - Tech stack, data patterns, design decisions
-  - BUSINESS_CONTEXT.md - Workflows, entities, business rules
-  - Additional docs based on your needs
-
-- **Hierarchical Navigation** (subdirectory CLAUDE.md files)
-  - app/controllers/CLAUDE.md - Controller patterns
-  - app/views/CLAUDE.md - Template patterns
-  - Additional as needed
-
-- **All maintained in git** alongside your code
+| **Guides** | ✅ | ✅ |
+| **Builder workflow** | Manual | Skill-guided |
+| **Reusable across projects** | Copy files | Simple curl install |
+| **Slash commands** | ❌ | ✅ |
+| **Validation checklists** | Manual | Built-in |
+| **Quality enforcement** | Self-discipline | Guardrails |
 
 ---
 
 ## Key Principles
 
 **Signal over Noise:**
-- Document what can't be derived from code structure
+- Document what code structure cannot reveal
 - Capture terminology mismatches (UI vs code vs database)
-- Focus on gotchas, business rules, and architectural decisions
+- Focus on gotchas, business rules, architectural decisions
 - Remove generic framework explanations
 
 **Verify Against Code:**
-- Never document architecture without checking actual code
-- Cross-check claims against implementation
-- Test context tree effectiveness with real tasks
+- Check architectural claims against actual implementation
+- Never document from other documentation
+- Test effectiveness with real tasks
 
 **Single Source of Truth:**
 - Each architectural fact has one authoritative location
 - Other documents reference, never duplicate
-- Prevents documentation drift
 
-**For complete principles:** See [CONTEXT_TREE_PRINCIPLES.md](CONTEXT_TREE_PRINCIPLES.md)
+See [CONTEXT_TREE_PRINCIPLES.md](CONTEXT_TREE_PRINCIPLES.md) for complete principles.
 
 ---
 
 ## Documentation
 
-- **[CONTEXT_TREE_QUICK_START.md](CONTEXT_TREE_QUICK_START.md)** - Getting started guide
-- **[CONTEXT_TREE_BUILDER.md](CONTEXT_TREE_BUILDER.md)** - Interview guide and templates
-- **[CONTEXT_TREE_PRINCIPLES.md](CONTEXT_TREE_PRINCIPLES.md)** - Design principles and patterns
-- **[CONTEXT_TREE_DISCOVERY.md](CONTEXT_TREE_DISCOVERY.md)** - Automated analysis commands
-- **[skills/README.md](skills/README.md)** - How skills work (Advanced installation)
+- [CONTEXT_TREE_QUICK_START.md](CONTEXT_TREE_QUICK_START.md) - Getting started
+- [CONTEXT_TREE_BUILDER.md](CONTEXT_TREE_BUILDER.md) - Interview guide and templates
+- [CONTEXT_TREE_PRINCIPLES.md](CONTEXT_TREE_PRINCIPLES.md) - Design principles
+- [CONTEXT_TREE_DISCOVERY.md](CONTEXT_TREE_DISCOVERY.md) - Automated analysis commands
+- [skills/README.md](skills/README.md) - How skills work (Advanced)
 
 ---
 
 ## FAQ
 
-**Q: How long does this take?**
-A: 2-4 hours for initial context tree, then refinement over 1-2 weeks of real usage.
+**How long does this take?**
+2-4 hours for initial context tree, then refinement over 1-2 weeks of real usage.
 
-**Q: Do I need to document everything?**
-A: No! Focus on signal-to-noise ratio. Document only what can't be derived from code structure.
+**Do I document everything?**
+No. Focus on signal-to-noise ratio. Document only what code structure cannot reveal.
 
-**Q: What if I don't know the answer to something?**
-A: Say so! Claude can help investigate, or mark it as "needs research."
+**Can I do this in multiple sessions?**
+Yes. Commit after each session. Next session: "Continue building the context tree."
 
-**Q: Can I do this in multiple sessions?**
-A: Yes! Commit after each session. Next session: "Continue building the context tree."
-
-**Q: Basic or Advanced installation?**
-A:
-- **Basic**: First context tree, single project, learning the methodology
-- **Advanced**: Multiple projects, want systematic quality enforcement, experienced with context trees
-
-**Q: Can I upgrade from Basic to Advanced later?**
-A: Yes! Just run the advanced installer. Your existing context tree files remain unchanged.
-```bash
-cd ~/your-project
-curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-advanced.sh | bash
-```
+**Basic or Advanced?**
+- Basic: First context tree, learning the methodology
+- Advanced: Multiple projects, systematic quality enforcement
 
 ---
 
@@ -253,7 +151,7 @@ curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-adv
 
 ## License
 
-MIT License - See LICENSE file for details
+MIT License - See LICENSE file
 
 ---
 
@@ -265,4 +163,4 @@ MIT License - See LICENSE file for details
 
 ---
 
-*Build context trees. Eliminate AI tech debt. Ship faster.*
+*Build context trees. Make Claude Code effective. Ship faster.*
