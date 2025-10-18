@@ -1,15 +1,17 @@
 ---
 name: Context Tree Maintenance
-description: Build, maintain, audit, and validate context trees for brownfield codebases. Use when building initial context trees, auditing documentation for signal-to-noise ratio, capturing insights during development, validating architectural claims against code, performing monthly maintenance checks, removing outdated content, or running automated codebase discovery.
+description: Maintain, audit, and validate context trees for brownfield codebases. Use when capturing insights during development, auditing documentation for signal-to-noise ratio, validating architectural claims against code, performing monthly maintenance checks, or removing outdated content. For initial context tree build, use Context Tree Builder skill.
 ---
 
 # Context Tree Maintenance
 
 ## Overview
 
-A **context tree** is a structured documentation architecture that maximizes AI assistant effectiveness when working with codebases. It uses hierarchical CLAUDE.md files and focused reference documents to provide decision-tree-like guidance, connecting business domain knowledge, technical architecture, and implementation patterns.
+Maintain an existing **context tree** to ensure it remains accurate, high-value, and effective. This skill focuses on ongoing curation and quality control - the hard part of context trees.
 
-**The hard part is not generating documentation - it's curating high-value context and maintaining signal-to-noise ratio.**
+**For initial context tree creation, use the Context Tree Builder skill.**
+
+**The hard part is not generating documentation - it's curating high-value context and maintaining signal-to-noise ratio over time.**
 
 ## Critical Principles (Guardrails)
 
@@ -92,88 +94,6 @@ A **context tree** is a structured documentation architecture that maximizes AI 
 
 **Commitment Device**: Before documenting anything, announce: "I'm verifying [claim] against code at [file:line]"
 
-## Building Initial Context Tree
-
-### Phase 1: Automated Discovery (15-20 minutes)
-
-**Run systematic analysis to understand codebase structure. DO NOT PROCEED without running these commands.**
-
-See the **[discovery-commands.md](discovery-commands.md)** file for complete bash command reference covering:
-- Tech stack detection
-- Database detection
-- Directory structure analysis
-- Entry points & routes
-- Pattern detection (multi-tenancy, auth, architecture)
-- Existing documentation audit
-- Build & test setup
-
-**STOP after discovery. Review findings with domain expert before proceeding.**
-
-### Phase 2: Domain Expert Interview (30-60 minutes)
-
-**Ask focused questions to capture institutional knowledge. Quality over quantity.**
-
-Critical questions (adapt based on codebase):
-
-**Business Context:**
-1. What does this codebase do in one sentence?
-2. Who are the users? (Roles, not just "users")
-3. What's the core business workflow? (3-5 steps)
-4. What's the most complex business domain area?
-
-**Terminology Traps:**
-5. What terms differ between UI, code, and database? (This is critical - capture all mappings)
-6. Any legacy names still in code but not in UI?
-7. Industry-specific terms that developers must know?
-
-**Architectural Gotchas:**
-8. What must every developer know about data storage? (Primary database, query patterns, caching)
-9. Multi-tenant? If yes, how is tenant isolation enforced?
-10. Authentication/authorization pattern?
-11. What framework version? Any version-specific gotchas?
-
-**Pain Points:**
-12. What takes longest to explain to new developers?
-13. What do new developers always get wrong?
-14. What architectural decision causes the most confusion?
-15. Any terminology that causes recurring mistakes?
-
-**STOP generating generic answers. Push for specific examples and actual pain points.**
-
-**Commitment Device**: After each answer, verify: "Let me check the code to confirm [claim]..."
-
-### Phase 3: Generate Core Files (45-60 minutes)
-
-**Create foundational documentation with ruthless focus on signal-to-noise.**
-
-**Priority order:**
-1. **Root CLAUDE.md** - Navigation hub, critical patterns, decision trees
-2. **docs/GLOSSARY.md** - Terminology mappings (UI ↔ code ↔ database)
-3. **docs/ARCHITECTURE.md** - Tech stack, data storage, multi-tenancy, version-specific patterns
-4. **docs/BUSINESS_CONTEXT.md** - Core workflow, domain entities, business rules
-
-**For each file:**
-- ✅ Start with concrete facts and examples
-- ✅ Focus on what can't be derived from code structure
-- ❌ Don't write generic explanations of MVC, REST, etc.
-- ❌ Don't list every file or API endpoint
-- **VERIFY**: Cross-check architectural claims against actual code before writing
-
-**Commitment Device**: Before writing each doc, announce:
-"I'm creating [filename]. I will verify all architectural claims against code at [file:line]."
-
-**Commit files as they're created - don't batch.**
-
-### Phase 4: Validation (1-2 weeks)
-
-**Test context tree effectiveness with real tasks.**
-
-1. Give AI assistant a real debugging task using only the context tree
-2. Give AI assistant a feature implementation task
-3. Identify what information was missing (add it)
-4. Note what information was present but unused (candidate for removal)
-
-**Iterate based on gaps discovered.**
 
 ## Capturing Insights During Development
 
@@ -223,39 +143,37 @@ Critical questions (adapt based on codebase):
 
 **Commit immediately with clear message describing the insight captured.**
 
-## Validating & Pruning
+## Running a Quality Audit
 
-**Continuous quality control is essential.**
-
-### Validation Process
-
-**Run these checks regularly (monthly or when major changes occur):**
+**Run monthly or when major changes occur to maintain signal-to-noise ratio.**
 
 **Commitment Device**: Announce at start: "I'm validating the context tree against actual code."
 
-1. **Architectural accuracy check**
-   - Pick 3 architectural claims from `ARCHITECTURE.md`
-   - Find actual code that implements each claim
-   - Verify claims match implementation
-   - **Announce**: "Verifying [claim] at [file:line]"
-   - If mismatch: Fix immediately and search for propagated errors
+### Audit Checklist
 
-2. **Terminology accuracy check**
-   - Pick 3 terms from `GLOSSARY.md`
-   - Grep codebase for actual usage
-   - Verify mappings are correct
-   - **Announce**: "Verifying term '[term]' with grep"
-   - If mismatch: Fix immediately
+**1. Architectural Accuracy Check**
+- Pick 3 architectural claims from `ARCHITECTURE.md`
+- Find actual code that implements each claim
+- Verify claims match implementation
+- **Announce**: "Verifying [claim] at [file:line]"
+- If mismatch: Fix immediately and search for propagated errors
 
-3. **Effectiveness test**
-   - Give AI assistant a task using only context tree
-   - Note what information was missing (add it)
-   - Note what information was unused (candidate for removal)
-   - Note what information was incorrect (fix immediately)
+**2. Terminology Accuracy Check**
+- Pick 3 terms from `GLOSSARY.md`
+- Grep codebase for actual usage
+- Verify mappings are correct
+- **Announce**: "Verifying term '[term]' with grep"
+- If mismatch: Fix immediately
 
-### Pruning Low-Value Content
+**3. Effectiveness Test**
+- Give AI assistant a task using only context tree
+- Note what information was missing (add it)
+- Note what information was unused (candidate for removal)
+- Note what information was incorrect (fix immediately)
 
-**Remove content that doesn't justify its token cost.**
+**4. Pruning Pass**
+
+Remove content that doesn't justify its token cost.
 
 **Candidates for removal:**
 - Generic framework explanations ("MVC separates concerns...")
@@ -269,6 +187,14 @@ Critical questions (adapt based on codebase):
 
 **Commitment Device**: Before removing content, announce:
 "Testing if context tree works without [section]. If task succeeds, I'll remove it."
+
+**5. Cross-Reference Check**
+- Verify all links between documents still work
+- Update references if files were moved or restructured
+
+**6. Commit Audit Results**
+- Commit all fixes and updates from audit
+- Use clear commit message: "audit: [what was fixed/pruned]"
 
 ### Handling Architectural Changes
 
@@ -351,18 +277,20 @@ Critical questions (adapt based on codebase):
 
 ## Summary: Core Workflow
 
-**Building:**
-1. Automated discovery → Review with domain expert
-2. Focused interview (quality over quantity)
-3. Generate core files (verify against code)
-4. Test with real tasks → Iterate
-
-**Maintaining:**
+**Ongoing Maintenance:**
 1. Capture insights immediately when discovered
 2. Validate architectural claims against code regularly
 3. Prune low-value content ruthlessly
 4. Update alongside code changes
-5. Test effectiveness monthly
+5. Run monthly quality audits
+
+**Monthly Audit:**
+1. Architectural accuracy check (3 claims)
+2. Terminology accuracy check (3 terms)
+3. Effectiveness test (real task)
+4. Pruning pass (remove low-value content)
+5. Cross-reference check
+6. Commit audit results
 
 **Remember:**
 - Signal-to-noise ratio is the primary quality metric
@@ -374,4 +302,4 @@ Critical questions (adapt based on codebase):
 
 ---
 
-*This skill focuses on curation and quality control - the hard part of context trees. Generation is easy; maintaining high signal-to-noise ratio is what matters.*
+*This skill focuses on ongoing curation and quality control - the hard part of context trees. For initial context tree build, use the Context Tree Builder skill.*

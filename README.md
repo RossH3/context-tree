@@ -58,16 +58,18 @@ curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-adv
 ```
 
 Installs to `.claude/`:
-- Context Tree Maintenance skill (automatic discovery)
-- Slash commands (`/audit-context`, `/discover-codebase`, `/capture-insight`)
+- Context Tree Builder skill (initial build workflow)
+- Context Tree Maintenance skill (ongoing curation)
+- Slash commands (`/build-context-tree`, `/audit-context`, `/discover-codebase`, `/capture-insight`)
 - Session hooks
 
 **Usage:**
 ```bash
 cd ~/your-project
 claude
-/discover-codebase
-# Or: "Use the Context Tree Maintenance skill"
+/build-context-tree
+# Or: "Use the Context Tree Builder skill"
+# After initial build, use Maintenance skill for ongoing work
 ```
 
 ### Upgrade Path
@@ -86,11 +88,12 @@ Your context tree files remain unchanged.
 | Feature | Basic | Advanced |
 |---------|-------|----------|
 | **Guides** | ✅ | ✅ |
-| **Builder workflow** | Manual | Skill-guided |
+| **Builder workflow** | Manual | Skill-guided (5 phases) |
+| **Maintenance workflow** | Manual | Skill-guided (monthly audit) |
 | **Reusable across projects** | Copy files | Simple curl install |
-| **Slash commands** | ❌ | ✅ |
-| **Validation checklists** | Manual | Built-in |
-| **Quality enforcement** | Self-discipline | Guardrails |
+| **Slash commands** | ❌ | ✅ (4 commands) |
+| **Validation checklists** | Manual | Built-in (both skills) |
+| **Quality enforcement** | Self-discipline | Guardrails & commitment devices |
 
 ---
 

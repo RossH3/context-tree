@@ -22,7 +22,8 @@ echo "║        Context Tree - Advanced Installation                ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 echo "This installs to: $(pwd)/.claude/"
-echo "  ✓ Context tree maintenance skill → .claude/skills/context-tree-maintenance/"
+echo "  ✓ Context Tree Builder skill → .claude/skills/context-tree-builder/"
+echo "  ✓ Context Tree Maintenance skill → .claude/skills/context-tree-maintenance/"
 echo "  ✓ Slash commands → .claude/commands/"
 echo "  ✓ Session hooks → .claude/hooks/"
 echo ""
@@ -104,19 +105,22 @@ fi
 
 # Create directory structure
 echo "Creating directory structure..."
+mkdir -p .claude/skills/context-tree-builder
 mkdir -p .claude/skills/context-tree-maintenance
 mkdir -p .claude/commands
 mkdir -p .claude/hooks
 
-# Install skill
+# Install skills
 echo ""
-echo "Installing skill..."
+echo "Installing skills..."
+install_file "skills/context-tree-builder/SKILL.md" ".claude/skills/context-tree-builder/SKILL.md" || exit 1
+install_file "skills/context-tree-builder/discovery-commands.md" ".claude/skills/context-tree-builder/discovery-commands.md" || exit 1
 install_file "skills/context-tree-maintenance/SKILL.md" ".claude/skills/context-tree-maintenance/SKILL.md" || exit 1
-install_file "skills/context-tree-maintenance/discovery-commands.md" ".claude/skills/context-tree-maintenance/discovery-commands.md" || exit 1
 
 # Install commands
 echo ""
 echo "Installing slash commands..."
+install_file "commands/build-context-tree.md" ".claude/commands/build-context-tree.md" || exit 1
 install_file "commands/audit-context.md" ".claude/commands/audit-context.md" || exit 1
 install_file "commands/discover-codebase.md" ".claude/commands/discover-codebase.md" || exit 1
 install_file "commands/capture-insight.md" ".claude/commands/capture-insight.md" || exit 1
@@ -132,10 +136,12 @@ echo "✅ Installation Complete!"
 echo ""
 
 # Calculate sizes
-SKILL_LINES=$(wc -l < ".claude/skills/context-tree-maintenance/SKILL.md" | tr -d ' ')
-COMMANDS_LINES=$(wc -l < ".claude/skills/context-tree-maintenance/discovery-commands.md" | tr -d ' ')
-echo "   Skill: $SKILL_LINES lines (SKILL.md)"
-echo "   Supporting files: $COMMANDS_LINES lines (discovery-commands.md)"
+BUILDER_LINES=$(wc -l < ".claude/skills/context-tree-builder/SKILL.md" | tr -d ' ')
+MAINTENANCE_LINES=$(wc -l < ".claude/skills/context-tree-maintenance/SKILL.md" | tr -d ' ')
+DISCOVERY_LINES=$(wc -l < ".claude/skills/context-tree-builder/discovery-commands.md" | tr -d ' ')
+echo "   Builder skill: $BUILDER_LINES lines (SKILL.md)"
+echo "   Maintenance skill: $MAINTENANCE_LINES lines (SKILL.md)"
+echo "   Supporting files: $DISCOVERY_LINES lines (discovery-commands.md)"
 echo "   Location: $(pwd)/.claude/"
 echo ""
 
@@ -145,14 +151,18 @@ echo ""
 echo "Start Claude Code in this project:"
 echo "  claude"
 echo ""
-echo "Use slash commands:"
-echo "  /audit-context       - Full validation workflow"
-echo "  /discover-codebase   - Automated codebase discovery"
+echo "Initial Build (first time):"
+echo "  /build-context-tree  - Build initial context tree (2-4 hour workflow)"
+echo "  /discover-codebase   - Just run discovery (Phase 1 only)"
+echo ""
+echo "Ongoing Maintenance:"
+echo "  /audit-context       - Monthly quality audit"
 echo "  /capture-insight     - Quick insight capture"
 echo ""
-echo "Claude will automatically use the skill when relevant."
-echo "You can also invoke it explicitly:"
-echo '  "Use the Context Tree Maintenance skill to audit the docs"'
+echo "Claude will automatically use skills when relevant."
+echo "You can also invoke them explicitly:"
+echo '  "Use the Context Tree Builder skill"'
+echo '  "Use the Context Tree Maintenance skill to audit"'
 echo ""
 
 if [ "$LOCAL_MODE" = true ]; then
@@ -167,5 +177,5 @@ echo "🔄 Uninstalling"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "To uninstall:"
-echo "  rm -rf .claude/skills/context-tree-maintenance .claude/commands .claude/hooks"
+echo "  rm -rf .claude/skills/context-tree-builder .claude/skills/context-tree-maintenance .claude/commands .claude/hooks"
 echo ""

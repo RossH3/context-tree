@@ -15,32 +15,56 @@ Think of skills as **executable best practices** that Claude follows consistentl
 
 ## Available Skills
 
+### Context Tree Builder
+
+**Location**: `skills/context-tree-builder/SKILL.md`
+
+**Purpose**: Build initial context tree for brownfield codebases through structured 2-4 hour session
+
+**When to use**:
+- Starting a new context tree from scratch
+- Initial codebase documentation project
+- Setting up AI-optimized documentation for the first time
+
+**Slash commands** (if installed in project):
+- `/build-context-tree` - Full build workflow (Phase 1-5)
+- `/discover-codebase` - Automated discovery only (Phase 1)
+
+**Key features**:
+- Claude Skills format with automatic discovery
+- Structured 5-phase workflow: Discovery → Interview → Generate → Validate → Subdirectories
+- SKILL.md + discovery-commands.md reference file
+- "Common Rationalizations" section to prevent shortcuts
+- Commitment devices for verification discipline
+- Templates for all core files (CLAUDE.md, GLOSSARY, ARCHITECTURE, BUSINESS_CONTEXT)
+- Subdirectory CLAUDE.md generation
+- Signal-to-noise optimization focus
+
 ### Context Tree Maintenance
 
 **Location**: `skills/context-tree-maintenance/SKILL.md`
 
-**Purpose**: Build, maintain, audit, and validate context trees for brownfield codebases
+**Purpose**: Maintain, audit, and validate existing context trees for ongoing quality
 
 **When to use**:
-- Building initial context tree for a project
-- Auditing existing documentation for signal-to-noise ratio
 - Capturing insights discovered during development
+- Auditing existing documentation for signal-to-noise ratio
 - Validating architectural claims against code
 - Monthly maintenance and quality checks
 - Pruning outdated or low-value content
-- Running automated codebase discovery
+- Updating context tree alongside code changes
 
 **Slash commands** (if installed in project):
-- `/audit-context` - Full validation workflow
-- `/discover-codebase` - Automated discovery only
-- `/capture-insight` - Quick insight capture
+- `/audit-context` - Monthly quality audit workflow
+- `/capture-insight` - Quick insight capture during development
 
 **Key features**:
 - Claude Skills format with automatic discovery
-- SKILL.md (377 lines) + discovery-commands.md reference file
+- Structured monthly audit checklist (6 steps)
 - "Common Rationalizations" section to prevent shortcuts
 - Commitment devices for verification discipline
-- Validation checklists for quality control
+- Insight capture workflow
+- Pruning guidelines
 - Signal-to-noise optimization focus
 
 ## How Skills Work
@@ -49,16 +73,27 @@ Think of skills as **executable best practices** that Claude follows consistentl
 
 **Claude Skills format:**
 ```
-skills/context-tree-maintenance/
-├── SKILL.md                    # Main skill file (377 lines)
-│   ├── YAML frontmatter (name, description)
-│   ├── Overview
-│   ├── Critical Principles
-│   ├── Common Rationalizations
-│   ├── Workflows (Building, Capturing, Validating)
-│   ├── Maintenance Patterns
-│   └── Verification Checklist
-└── discovery-commands.md       # Supporting file for bash commands
+skills/
+├── context-tree-builder/
+│   ├── SKILL.md                    # Initial build workflow (5 phases)
+│   │   ├── YAML frontmatter (name, description)
+│   │   ├── Overview
+│   │   ├── Critical Principles
+│   │   ├── Common Rationalizations
+│   │   ├── Phase 1-5 workflows
+│   │   ├── Templates for core files
+│   │   └── Verification Checklist
+│   └── discovery-commands.md       # Supporting file for bash commands
+└── context-tree-maintenance/
+    └── SKILL.md                    # Ongoing maintenance workflows
+        ├── YAML frontmatter (name, description)
+        ├── Overview
+        ├── Critical Principles
+        ├── Common Rationalizations
+        ├── Capturing Insights
+        ├── Running Quality Audit (6-step checklist)
+        ├── Maintenance Patterns
+        └── Verification Checklist
 ```
 
 **Key characteristics:**
@@ -70,19 +105,22 @@ skills/context-tree-maintenance/
 ### Usage
 
 **Automatic discovery** (Claude Skills):
-- Claude automatically loads the skill when working on context tree tasks
-- Based on description keywords: "context tree", "documentation", "audit", etc.
+- Claude automatically loads skills based on description keywords
+- Builder: "build initial context tree", "brownfield codebase"
+- Maintenance: "maintain", "audit", "validate", "capture insights"
 
 **Manual invocation**:
 ```
+Claude, use the Context Tree Builder skill to build docs
 Claude, use the Context Tree Maintenance skill to audit the docs
 ```
 
 **Slash commands** (if installed):
 ```
-/audit-context
-/discover-codebase
-/capture-insight
+/build-context-tree     # Initial build (Builder skill)
+/discover-codebase      # Just discovery (Builder skill, Phase 1)
+/audit-context          # Monthly audit (Maintenance skill)
+/capture-insight        # Quick insight (Maintenance skill)
 ```
 
 ## Enhancing Skills
