@@ -62,7 +62,7 @@ Maintain an existing **context tree** to ensure it remains accurate, high-value,
 - **Soft Context** (Context Tree Domain): Business logic, design decisions, gotchas, institutional knowledge
 - **Example**:
   - ❌ Don't document: `class Order extends Model` (visible in code)
-  - ✅ Do document: "Orders represent student applications - search for Order not Application" (institutional knowledge)
+  - ✅ Do document: "Registrations represent attendee signups - search for Registration not Signup" (institutional knowledge)
 
 ## Common Rationalizations (STOP THESE IMMEDIATELY)
 

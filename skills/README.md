@@ -9,7 +9,6 @@ Skills are specialized capabilities that extend Claude's effectiveness through o
 - **Automatic discovery** - Claude loads skills when relevant based on description
 - **Portable** - Works across Claude Code, Claude web, and API
 - **Composable** - Multiple skills work together seamlessly
-- **Progressive disclosure** - Keep SKILL.md under 500 lines, use supporting files for details
 
 Think of skills as **executable best practices** that Claude follows consistently across projects.
 
