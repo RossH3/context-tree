@@ -28,7 +28,6 @@ Think of skills as **executable best practices** that Claude follows consistentl
 
 **Slash commands** (if installed in project):
 - `/build-context-tree` - Full build workflow (Phase 1-5)
-- `/discover-codebase` - Automated discovery only (Phase 1)
 
 **Key features**:
 - Claude Skills format with automatic discovery
@@ -118,7 +117,6 @@ Claude, use the Context Tree Maintenance skill to audit the docs
 **Slash commands** (if installed):
 ```
 /build-context-tree     # Initial build (Builder skill)
-/discover-codebase      # Just discovery (Builder skill, Phase 1)
 /audit-context          # Monthly audit (Maintenance skill)
 /capture-insight        # Quick insight (Maintenance skill)
 ```

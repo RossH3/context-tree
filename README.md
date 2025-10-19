@@ -60,7 +60,7 @@ curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-adv
 Installs to `.claude/`:
 - Context Tree Builder skill (initial build workflow)
 - Context Tree Maintenance skill (ongoing curation)
-- Slash commands (`/build-context-tree`, `/audit-context`, `/discover-codebase`, `/capture-insight`)
+- Slash commands (`/build-context-tree`, `/audit-context`, `/capture-insight`)
 - Session hooks
 
 **Usage:**
@@ -91,7 +91,7 @@ Your context tree files remain unchanged.
 | **Builder workflow** | Manual | Skill-guided (5 phases) |
 | **Maintenance workflow** | Manual | Skill-guided (monthly audit) |
 | **Reusable across projects** | Copy files | Simple curl install |
-| **Slash commands** | ❌ | ✅ (4 commands) |
+| **Slash commands** | ❌ | ✅ (3 commands) |
 | **Validation checklists** | Manual | Built-in (both skills) |
 | **Quality enforcement** | Self-discipline | Guardrails & commitment devices |
 

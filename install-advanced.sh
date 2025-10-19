@@ -122,7 +122,6 @@ echo ""
 echo "Installing slash commands..."
 install_file "commands/build-context-tree.md" ".claude/commands/build-context-tree.md" || exit 1
 install_file "commands/audit-context.md" ".claude/commands/audit-context.md" || exit 1
-install_file "commands/discover-codebase.md" ".claude/commands/discover-codebase.md" || exit 1
 install_file "commands/capture-insight.md" ".claude/commands/capture-insight.md" || exit 1
 
 # Install hooks
@@ -153,7 +152,6 @@ echo "  claude"
 echo ""
 echo "Initial Build (first time):"
 echo "  /build-context-tree  - Build initial context tree (2-4 hour workflow)"
-echo "  /discover-codebase   - Just run discovery (Phase 1 only)"
 echo ""
 echo "Ongoing Maintenance:"
 echo "  /audit-context       - Monthly quality audit"
