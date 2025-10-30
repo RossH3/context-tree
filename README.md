@@ -28,21 +28,24 @@ AI assistants can explore code structure, but they can't know:
 
 ### Installation
 
-1. **Clone or copy this repository** to your project:
-   ```bash
-   git clone https://github.com/yourusername/context-tree.git .context-tree-setup
-   ```
+From your project directory, run:
 
-2. **Copy the orchestrator files** to your project's `.claude` directory:
-   ```bash
-   cp -r .context-tree-setup/.claude/orchestrators .claude/
-   cp .context-tree-setup/.claude/commands/build-context-tree.md .claude/commands/
-   ```
+```bash
+curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-advanced.sh | bash
+```
 
-3. **Run the workflow:**
-   ```bash
-   /build-context-tree
-   ```
+This installs:
+- 3-phase orchestrated workflow → `.claude/orchestrators/context-tree-builder/`
+- Maintenance tools → `.claude/skills/context-tree-maintenance/`
+- Slash commands → `.claude/commands/`
+- Session hooks → `.claude/hooks/`
+
+### Usage
+
+Start Claude Code and run:
+```bash
+/build-context-tree
+```
 
 ---
 
