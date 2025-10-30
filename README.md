@@ -1,154 +1,260 @@
-# Context Tree
+# Context Tree Builder
 
-You build a hierarchy of `CLAUDE.md` files for your codebase. Claude Code uses these files to understand your architecture, terminology, and business rules. You work with Claude Code to build them; no script auto-generates them. Expect to invest 2-4 hours initially, plus refinement over 1-2 weeks.
+**AI onboarding tool for brownfield codebases with domain expert interview**
 
-**Best for:** Production codebases (50-5000+ files) with limited documentation, teams using AI assistants.
-
----
-
-## What This Is NOT
-
-- **Not auto-generated.** You and Claude Code build these files together through interview and validation. No script generates documentation from your code.
-- **Not automatic.** Plan to spend 2-4 hours on initial build, plus ongoing maintenance.
-- **Not for new projects.** Use this on brownfield codebases where AI assistants lack context.
+This tool helps AI assistants (Claude, GitHub Copilot, etc.) understand legacy codebases by combining automated discovery with structured interviews of domain experts. The result is high-signal documentation that captures institutional knowledge AI can't infer from code alone.
 
 ---
 
-## What You Build
+## The Problem
 
-- **Root CLAUDE.md** - Navigation hub with decision trees ("What are you trying to do?"), critical patterns, gotchas
-- **Reference docs** (docs/)
-  - GLOSSARY.md - UI ↔ code ↔ database terminology mappings
-  - ARCHITECTURE.md - Tech stack, data patterns, design decisions
-  - BUSINESS_CONTEXT.md - Workflows, entities, business rules
-- **Subdirectory CLAUDE.md files** - Scoped context (app/controllers/CLAUDE.md, app/views/CLAUDE.md)
-- **All in git** - Maintained alongside your code
+AI assistants can explore code structure, but they can't know:
+- Why architectural decisions were made
+- What business terms mean (and how UI → code → DB terms map)
+- What mistakes developers repeatedly make
+- What takes longest to explain to new team members
+- Institutional knowledge that exists only in people's heads
 
----
-
-## Installation
-
-### Basic (Guides Only)
-
-Best for: First-time users, single project
-
-```bash
-curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install.sh | bash
-```
-
-Downloads four guide files to project root:
-- CONTEXT_TREE_BUILDER.md
-- CONTEXT_TREE_PRINCIPLES.md
-- CONTEXT_TREE_DISCOVERY.md
-- CONTEXT_TREE_QUICK_START.md
-
-**Usage:**
-```bash
-claude
-# Tell Claude: "Help me build a context tree using CONTEXT_TREE_BUILDER.md"
-```
-
-### Advanced (Skills + Commands)
-
-Best for: Multiple projects, systematic quality enforcement
-
-```bash
-cd ~/your-project
-curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-advanced.sh | bash
-```
-
-Installs to `.claude/`:
-- Context Tree Builder skill (initial build workflow)
-- Context Tree Maintenance skill (ongoing curation)
-- Slash commands (`/build-context-tree`, `/audit-context`, `/capture-insight`)
-- Session hooks
-
-**Usage:**
-```bash
-cd ~/your-project
-claude
-/build-context-tree
-# Or: "Use the Context Tree Builder skill"
-# After initial build, use Maintenance skill for ongoing work
-```
-
-### Upgrade Path
-
-Start with Basic. Upgrade anytime:
-```bash
-cd ~/your-project
-curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/install-advanced.sh | bash
-```
-Your context tree files remain unchanged.
+**Solution:** Automated discovery + domain expert interview + quality-gated documentation
 
 ---
 
-## Comparison
+## Quick Start
 
-| Feature | Basic | Advanced |
-|---------|-------|----------|
-| **Guides** | ✅ | ✅ |
-| **Builder workflow** | Manual | Skill-guided (5 phases) |
-| **Maintenance workflow** | Manual | Skill-guided (monthly audit) |
-| **Reusable across projects** | Copy files | Simple curl install |
-| **Slash commands** | ❌ | ✅ (3 commands) |
-| **Validation checklists** | Manual | Built-in (both skills) |
-| **Quality enforcement** | Self-discipline | Guardrails & commitment devices |
+### Prerequisites
+- Claude Code (or compatible AI assistant with slash command support)
+- Access to someone who knows the codebase intimately (for interview phase)
+- Brownfield codebase you want to document
 
----
+### Installation
 
-## Key Principles
+1. **Clone or copy this repository** to your project:
+   ```bash
+   git clone https://github.com/yourusername/context-tree.git .context-tree-setup
+   ```
 
-**Signal over Noise:**
-- Document what code structure cannot reveal
-- Capture terminology mismatches (UI vs code vs database)
-- Focus on gotchas, business rules, architectural decisions
-- Remove generic framework explanations
+2. **Copy the orchestrator files** to your project's `.claude` directory:
+   ```bash
+   cp -r .context-tree-setup/.claude/orchestrators .claude/
+   cp .context-tree-setup/.claude/commands/build-context-tree.md .claude/commands/
+   ```
 
-**Verify Against Code:**
-- Check architectural claims against actual implementation
-- Never document from other documentation
-- Test effectiveness with real tasks
-
-**Single Source of Truth:**
-- Each architectural fact has one authoritative location
-- Other documents reference, never duplicate
-
-See [CONTEXT_TREE_PRINCIPLES.md](CONTEXT_TREE_PRINCIPLES.md) for complete principles.
+3. **Run the workflow:**
+   ```bash
+   /build-context-tree
+   ```
 
 ---
 
-## Documentation
+## How It Works
 
-- [CONTEXT_TREE_QUICK_START.md](CONTEXT_TREE_QUICK_START.md) - Getting started
-- [CONTEXT_TREE_BUILDER.md](CONTEXT_TREE_BUILDER.md) - Interview guide and templates
-- [CONTEXT_TREE_PRINCIPLES.md](CONTEXT_TREE_PRINCIPLES.md) - Design principles
-- [CONTEXT_TREE_DISCOVERY.md](CONTEXT_TREE_DISCOVERY.md) - Automated analysis commands
-- [skills/README.md](skills/README.md) - How skills work (Advanced)
+### Three-Phase Orchestrated Workflow
+
+**Phase 1: Codebase Discovery (15-20 min)**
+- Automated exploration of codebase using AI
+- Identifies tech stack, architecture patterns, terminology traps
+- Finds confusing areas to ask about in interview
+- Output: `docs/context-tree-build/discovery_summary.json`
+
+**Phase 2: Domain Expert Interview (30-60 min) ⭐ THE KEY DIFFERENTIATOR**
+- Interactive Q&A with someone who knows the codebase
+- One question at a time, adaptive based on answers
+- Verifies answers against actual code immediately
+- Captures institutional knowledge that code can't show
+- Resumable across multiple sessions
+- Output: `docs/context-tree-build/interview_notes.json`
+
+**Phase 3: Documentation Generation (30-45 min)**
+- Generates docs from discovery + interview insights
+- **Quality gates:** Only generates docs with ≥3 substantial insights
+- **No generic slop:** If we don't have good content, we don't generate the doc
+- Output: CLAUDE.md (always) + optional GLOSSARY.md, ARCHITECTURE.md, BUSINESS_CONTEXT.md
 
 ---
 
-## FAQ
+## What You Get
 
-**How long does this take?**
-2-4 hours for initial context tree, then refinement over 1-2 weeks of real usage.
+### Always Generated
 
-**Do I document everything?**
-No. Focus on signal-to-noise ratio. Document only what code structure cannot reveal.
+**`CLAUDE.md`** - Navigation hub (~200 lines)
+- Critical concepts (top 5 confusion points)
+- Decision trees ("What are you trying to do?")
+- Common pitfalls to avoid
+- Quick reference for terminology and architecture
 
-**Can I do this in multiple sessions?**
-Yes. Commit after each session. Next session: "Continue building the context tree."
+### Conditionally Generated (quality-gated)
 
-**Basic or Advanced?**
-- Basic: First context tree, learning the methodology
-- Advanced: Multiple projects, systematic quality enforcement
+**`docs/GLOSSARY.md`** - Only if ≥3 verified terminology mappings
+- UI term → Code term → DB term mappings
+- Why naming differences exist
+- Search cheat sheet ("Looking for X? Grep for Y")
+
+**`docs/ARCHITECTURE.md`** - Only if ≥3 non-obvious patterns
+- Critical architectural patterns (multi-tenancy, dual databases, etc.)
+- Why patterns exist (historical context, constraints)
+- What breaks if violated
+- Security-critical rules
+
+**`docs/BUSINESS_CONTEXT.md`** - Only if ≥3 business insights
+- What the system does and why
+- Primary user workflows
+- Business rules and domain concepts
+- User roles and permissions
 
 ---
 
-## Support
+## Key Features
 
-- **Issues**: [GitHub Issues](https://github.com/RossH3/context-tree/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/RossH3/context-tree/discussions)
+### Resumable Workflow
+Each phase creates checkpoint files. If interrupted:
+- Phase 1: Can skip or re-run if `discovery_summary.json` exists
+- Phase 2: Continues from where you left off if `interview_notes.json` exists
+- Phase 3: Can skip or regenerate if final docs exist
+
+**Perfect for multi-session builds across days or weeks.**
+
+### Quality Gates Prevent Generic Slop
+Phase 3 only generates docs that have ≥3 substantial, verified insights.
+
+**Better to have no GLOSSARY.md than one filled with obvious mappings.**
+
+### Verification Built-In
+- Phase 1: Checks actual code, not docs
+- Phase 2: Verifies interview answers against code immediately
+- Phase 3: Cross-checks all claims before writing docs
+
+**Every architectural claim has file:line references.**
+
+### Interactive Interview (The Unique Value)
+Phase 2 asks domain experts focused questions one at a time:
+- Adaptive: Follow-up questions based on answers
+- Verified: Checks answers against code before accepting
+- Resumable: Save progress after each Q&A
+- Focused: Categories ensure comprehensive coverage
+
+**This captures knowledge that would otherwise be lost.**
+
+---
+
+## Example Output
+
+See [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md) Part 5 for a real example from a 50+ tenant SaaS application (Play Framework 2.0.4, Cassandra, ElasticSearch).
+
+**Notice:**
+- Critical concepts up front (terminology traps, architecture gotchas)
+- Decision trees for common tasks
+- Minimal explanation, maximum navigation
+- Under 200 lines total
+
+---
+
+## Usage Patterns
+
+### For New Projects
+1. Run `/build-context-tree` during onboarding
+2. Complete all 3 phases in 1-2 sessions (90-120 minutes total)
+3. Use docs during first week to validate effectiveness
+4. Add incremental insights as needed
+
+### For Existing Projects
+1. Run Phase 1 & 2 to capture current state
+2. Phase 3 generates baseline docs
+3. Use [incremental capture pattern](AI_DOCUMENTATION_FIELD_GUIDE.md#part-2-incremental-capture-system) going forward
+4. Update docs when you hit friction twice
+
+### For Team Onboarding
+1. Experienced developer runs interview (Phase 2 interviewee)
+2. New developer reads generated docs
+3. Track what's missing during first week
+4. Update docs to fill gaps
+
+---
+
+## When NOT to Use This
+
+**Don't use context-tree-builder if:**
+- Codebase is small (< 1000 lines) - just read it
+- Code is well-documented already - no need
+- No domain expert available - Phase 2 is the key value
+- Greenfield project - use conventional documentation
+
+**Use this for:**
+- Brownfield legacy codebases (5K+ lines)
+- Complex domain logic not obvious from code
+- Multi-tenant, multi-database, or unusual architectures
+- Projects with terminology traps (UI ≠ code ≠ DB terms)
+- When onboarding new developers repeatedly
+
+---
+
+## Core Principles
+
+From 6 months of real-world usage:
+
+1. **Verify against code, not docs** - Documentation lies, code doesn't
+2. **Signal-to-noise ratio** - Every line must justify token cost
+3. **No generic slop** - Only document what AI can't easily infer
+4. **Quality over quantity** - Better no doc than bad doc
+5. **Resumable** - Can stop and continue at checkpoint boundaries
+6. **Focus on institutional knowledge** - The domain expert interview is the unique value
+
+See [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md) for deeper exploration.
+
+---
+
+## Files in This Repository
+
+**Orchestrated Workflow (Use This):**
+- `.claude/commands/build-context-tree.md` - Main orchestrator command
+- `.claude/orchestrators/context-tree-builder/codebase-discovery.md` - Phase 1 subagent
+- `.claude/orchestrators/context-tree-builder/domain-interview.md` - Phase 2 subagent
+- `.claude/orchestrators/context-tree-builder/doc-generator.md` - Phase 3 subagent
+
+**Reference Documentation:**
+- `AI_DOCUMENTATION_FIELD_GUIDE.md` - Practical lessons and examples ⭐ START HERE
+- `CONTEXT_TREE_PRINCIPLES.md` - Deep dive on signal-to-noise, verification discipline
+- `ORCHESTRATION_CONVERSION_GUIDE.md` - How this orchestrated workflow was designed
+- `elements-of-style.md` - Classic writing guide (reference)
+
+**Historical (Preserved for Learning):**
+- `skills/context-tree-maintenance/` - Ongoing maintenance workflow
+- `CONTEXT_TREE_BUILDER.md` - Original monolithic approach (deprecated)
+- `CONTEXT_TREE_DISCOVERY.md` - Original discovery commands (deprecated)
+- `CONTEXT_TREE_QUICK_START.md` - Legacy quick start (deprecated)
+
+---
+
+## Maintenance After Initial Build
+
+After generating docs with `/build-context-tree`:
+
+**Incremental updates (recommended):**
+Follow the [Rule of Two](AI_DOCUMENTATION_FIELD_GUIDE.md#when-to-document):
+- First time AI makes mistake: Just correct it
+- Second time: Add 2-3 lines to CLAUDE.md
+- Prevents third time
+
+**Structured maintenance (optional):**
+Use the `context-tree-maintenance` skill for:
+- Capturing insights during development
+- Auditing docs for signal-to-noise
+- Pruning outdated content
+- Validating architectural claims
+
+See `skills/context-tree-maintenance/SKILL.md`
+
+---
+
+## Contributing
+
+This tool emerged from 6 months of experimentation on production codebases. The methodology evolved from comprehensive upfront documentation to this leaner orchestrated approach.
+
+**Feedback welcome:**
+- What worked for your codebase?
+- What didn't work?
+- What quality gates would you change?
+
+Open an issue or PR.
 
 ---
 
@@ -160,10 +266,10 @@ MIT License - See LICENSE file
 
 ## Credits
 
-- **Concept**: Ross Hanahan
-- **Inspired by**: Jesse Vincent's [Superpowers](https://github.com/obra/superpowers) skills system
-- **Persuasion principles**: Robert Cialdini's research on commitment and authority
+**Lessons learned from:** 6 months working on scribchoice (50+ tenant SaaS, Play Framework 2.0.4, Cassandra, ElasticSearch)
+
+**Author:** Ross Hanahan
 
 ---
 
-*Build context trees. Make Claude Code effective. Ship faster.*
+**Start here:** Read [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md), then run `/build-context-tree`
