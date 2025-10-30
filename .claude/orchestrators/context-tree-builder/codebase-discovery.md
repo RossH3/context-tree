@@ -28,7 +28,7 @@ You are a detective exploring an unfamiliar codebase. Your goal is **not** to un
 - Databases (check actual connection code, not README)
 - Key dependencies with versions (especially legacy/unusual ones)
 
-**Why versions matter:** Legacy versions (Play 2.0.4, Cassandra 1.2.12) have non-obvious constraints
+**Why versions matter:** Legacy versions often have non-obvious constraints that affect development
 
 ### 2. Architecture Patterns
 - MVC? Microservices? Monolith? Hybrid?
@@ -101,20 +101,20 @@ Create this file at: `docs/context-tree-build/discovery_summary.json`
     "discovery_duration_minutes": 18
   },
   "tech_stack": {
-    "framework": "Play Framework 2.0.4",
-    "language": "Java 8",
-    "build_tool": "SBT 0.13.5",
-    "databases": ["Cassandra 1.2.12", "ElasticSearch 1.7.6"],
+    "framework": "Rails 5.2.8",
+    "language": "Ruby 2.7.6",
+    "build_tool": "Bundler 2.3.10",
+    "databases": ["PostgreSQL 12.9", "Redis 6.2.6"],
     "key_dependencies": [
-      "PaymentsPlugin (internal, shared across 5 projects)",
-      "Apache Commons Lang 2.6"
+      "InternalAuthPlugin (internal, shared across 5 projects)",
+      "ActiveModel Serializers 0.10.12"
     ]
   },
   "architecture": {
     "pattern": "MVC with service layer",
     "multi_tenant": true,
     "multi_tenant_mechanism": "Hostname-based tenant isolation (clientid = request().host())",
-    "data_architecture": "Dual database: Cassandra (primary storage), ElasticSearch (query engine)",
+    "data_architecture": "Dual database: PostgreSQL (primary storage), Redis (cache + query acceleration)",
     "authentication": "Session cookies (legacy, not JWT)"
   },
   "entry_points": [
@@ -145,10 +145,10 @@ Create this file at: `docs/context-tree-build/discovery_summary.json`
     }
   ],
   "confusing_areas": [
-    "Why both Cassandra AND ElasticSearch? What's the relationship?",
-    "How does multi-tenancy actually work? Every query filtered by clientid?",
-    "Why still on Play 2.0.4 (released 2012)?",
-    "PaymentsPlugin is shared - can we modify it? What's the constraint?",
+    "Why both PostgreSQL AND Redis? What's the relationship?",
+    "How does multi-tenancy actually work? Every query filtered by tenant_id?",
+    "Why still on Rails 5.2.8? Is upgrade planned?",
+    "InternalAuthPlugin is shared - can we modify it? What's the constraint?",
     "Some controllers bypass models - when is this okay vs wrong?"
   ],
   "existing_docs": {
@@ -157,16 +157,16 @@ Create this file at: `docs/context-tree-build/discovery_summary.json`
     "inline_comments": "Sparse, mostly in PaymentsPlugin code"
   },
   "gotchas_identified": [
-    "Legacy Play 2.0.4 - many modern Play docs don't apply",
-    "Multi-tenant: MUST include clientid filter in all queries",
-    "Dual database: Cassandra is source of truth, ES is for queries only",
-    "PaymentsPlugin: Shared dependency, cannot modify without coordinating across 5 projects"
+    "Legacy Rails 5.2.8 - many modern Rails docs don't apply",
+    "Multi-tenant: MUST include tenant_id filter in all queries",
+    "Dual database: PostgreSQL is source of truth, Redis is for cache/queries only",
+    "InternalAuthPlugin: Shared dependency, cannot modify without coordinating across 5 projects"
   ],
   "questions_for_interview": [
-    "What's the relationship between Cassandra and ElasticSearch? When do you use each?",
-    "How do you ensure every query includes the clientid filter?",
+    "What's the relationship between PostgreSQL and Redis? When do you use each?",
+    "How do you ensure every query includes the tenant_id filter?",
     "Are there other terminology traps beyond Application=Order?",
-    "Why is the codebase still on Play 2.0.4? Is upgrade planned?",
+    "Why is the codebase still on Rails 5.2.8? Is upgrade planned?",
     "What are the common mistakes new developers make?",
     "What takes longest to explain to new team members?"
   ]

@@ -141,7 +141,7 @@ Phase 2 asks domain experts focused questions one at a time:
 
 ## Example Output
 
-See [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md) Part 5 for a real example from a 50+ tenant SaaS application (Play Framework 2.0.4, Cassandra, ElasticSearch).
+See [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md) Part 5 for a real example from a production multi-tenant SaaS application.
 
 **Notice:**
 - Critical concepts up front (terminology traps, architecture gotchas)
@@ -269,7 +269,7 @@ MIT License - See LICENSE file
 
 ## Credits
 
-**Lessons learned from:** 6 months working on scribchoice (50+ tenant SaaS, Play Framework 2.0.4, Cassandra, ElasticSearch)
+**Lessons learned from:** 6 months of production usage on multi-tenant SaaS applications
 
 **Author:** Ross Hanahan
 

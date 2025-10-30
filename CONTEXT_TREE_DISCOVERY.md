@@ -27,10 +27,10 @@ find . -name "*.rb" -o -name "*.js" | head -5 | xargs grep -h "^require\|^import
 
 ```bash
 # Check for database configs
-find config -name "*.yml" -o -name "*.rb" 2>/dev/null | xargs grep -i -E "(mysql|postgres|mongo|redis|elasticsearch)" | head -20
+find config -name "*.yml" -o -name "*.rb" 2>/dev/null | xargs grep -i -E "(mysql|postgres|mongo|redis)" | head -20
 
 # Check for database dependencies
-[ -f Gemfile ] && grep -i -E "(mysql|postgres|mongo|redis|elasticsearch)" Gemfile
+[ -f Gemfile ] && grep -i -E "(mysql|postgres|mongo|redis)" Gemfile
 ```
 
 ### Version Detection

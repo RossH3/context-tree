@@ -101,16 +101,16 @@ CLAUDE.md:
 
 **✅ Non-obvious (include):**
 - Multi-tenant by hostname extraction (not obvious from code structure)
-- Dual database pattern with specific roles (Cassandra=truth, ES=query)
+- Dual database pattern with specific roles (Primary DB=truth, Cache=acceleration)
 - Legacy version constraints with business reasons
-- Security-critical patterns (must filter by clientid)
+- Security-critical patterns (must filter by tenant_id)
 - Terminology where UI ≠ code ≠ DB
 
 **❌ Obvious (exclude):**
 - "This is an MVC application" (structure shows this)
 - "UserController handles user operations" (name shows this)
-- "We use Java" (file extensions show this)
-- Generic framework explanations ("Play uses routes file for URLs")
+- "We use Ruby" (file extensions show this)
+- Generic framework explanations ("Rails uses routes file for URLs")
 
 ---
 
@@ -583,7 +583,7 @@ git commit -m "docs: add business context and workflows"
 - **Commit incrementally** - One commit per file
 
 ### ❌ DON'T
-- **Don't explain frameworks** - No "Play uses routes for HTTP routing"
+- **Don't explain frameworks** - No "Rails uses routes for HTTP routing"
 - **Don't document obvious structure** - AI can see "UserController handles users"
 - **Don't generate docs just to fill slots** - Quality gates exist for a reason
 - **Don't duplicate content** - If it's in GLOSSARY.md, link to it from CLAUDE.md

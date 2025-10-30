@@ -100,19 +100,19 @@
 ```json
 {
   "tech_stack": {
-    "framework": "Play 2.0.4",
+    "framework": "Rails 5.2.8",
     "language": "Java",
     "build_tool": "SBT"
   },
   "architecture": {
     "pattern": "MVC",
     "multi_tenant": true,
-    "databases": ["Cassandra", "ElasticSearch"]
+    "databases": ["PostgreSQL", "Redis"]
   },
   "entry_points": ["conf/routes", "app/Global.java"],
   "key_directories": ["app/controllers", "app/models", "app/views"],
   "existing_docs": ["README.md"],
-  "gotchas": ["Legacy Play version", "Dual database pattern"]
+  "gotchas": ["Legacy framework version", "Dual database pattern"]
 }
 ```
 

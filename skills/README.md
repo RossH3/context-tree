@@ -166,7 +166,7 @@ Replace generic advice with specific examples from real usage:
 **After:**
 ```markdown
 - Verify architectural claims
-  **Example**: "Cassandra = source of truth" → grep for Cassandra usage, check actual data flow
+  **Example**: "PostgreSQL = source of truth" → grep for database usage, check actual data flow
 ```
 
 ### 4. Update Validation Checklists

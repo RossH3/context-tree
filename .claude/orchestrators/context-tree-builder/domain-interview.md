@@ -161,17 +161,17 @@ Follow-up: "So if a parent is applying to 3 schools in the same process,
 
 **Example:**
 ```
-Q: "Discovery shows both Cassandra and ElasticSearch. What's the relationship?"
+Q: "Discovery shows both PostgreSQL and Redis. What's the relationship?"
 
-A: "Cassandra is the source of truth for all data. ElasticSearch is purely
-    for querying. Data gets written to Cassandra, then async indexed to ES.
-    All reads go through ES queries, then data is pulled from Cassandra.
-    Never write to ES directly."
+A: "PostgreSQL is the source of truth for all data. Redis is purely
+    for caching and query acceleration. Data gets written to PostgreSQL,
+    then cached in Redis. All reads check Redis first, then fall back to
+    PostgreSQL. Never write directly to Redis."
 
-Verification: ✅ Confirmed - Found IndexingService.java that writes to Cassandra
-              then triggers ES indexing. No direct ES writes in controllers.
+Verification: ✅ Confirmed - Found CacheService.rb that writes to PostgreSQL
+              then triggers Redis caching. No direct Redis writes in controllers.
 
-Follow-up: "What happens if ES index is out of sync with Cassandra?"
+Follow-up: "What happens if Redis cache is out of sync with PostgreSQL?"
 ```
 
 ---
@@ -263,8 +263,8 @@ Capture: ⚠️ SECURITY-CRITICAL pitfall - add to Common Pitfalls section
 Q: "What takes the longest time to explain to new developers?"
 
 A: "The dual database pattern. People don't understand why we have both
-    Cassandra and ES, which one to query, when data is out of sync, how
-    indexing works, why we can't just use one. I spend 30 minutes on this
+    PostgreSQL and Redis, which one to query, when data is out of sync, how
+    caching works, why we can't just use one. I spend 30 minutes on this
     every onboarding."
 
 Verification: ✅ Confirmed - This explains the complexity I saw in discovery
@@ -306,18 +306,18 @@ Save incrementally at: `docs/context-tree-build/interview_notes.json`
     {
       "id": 2,
       "category": "architecture",
-      "question": "I see both Cassandra and ElasticSearch. What's the relationship?",
-      "answer": "Cassandra is source of truth, ElasticSearch is query engine only. Write to Cassandra, async index to ES. All queries go through ES, data pulled from Cassandra. Never write directly to ES.",
+      "question": "I see both PostgreSQL and Redis. What's the relationship?",
+      "answer": "PostgreSQL is source of truth, Redis is cache only. Write to PostgreSQL, async cache in Redis. All queries check Redis first, fall back to PostgreSQL. Never write directly to Redis.",
       "verified": true,
       "verification": {
         "result": "confirmed",
-        "evidence": "IndexingService.java:87 writes to Cassandra then triggers ES indexing. No direct ES writes found in controllers.",
-        "files_checked": ["app/services/IndexingService.java", "app/controllers/*.java"]
+        "evidence": "CacheService.rb:87 writes to PostgreSQL then triggers Redis caching. No direct Redis writes found in controllers.",
+        "files_checked": ["app/services/cache_service.rb", "app/controllers/*.rb"]
       },
       "timestamp": "2025-10-30T10:22:00Z",
       "value_for_docs": "high",
-      "follow_up_asked": "What happens if ES is out of sync with Cassandra?",
-      "follow_up_answer": "We have a reindex job that runs nightly to catch any missed updates. Also manual reindex command for emergencies."
+      "follow_up_asked": "What happens if Redis is out of sync with PostgreSQL?",
+      "follow_up_answer": "We have a cache invalidation job that runs nightly to catch any missed updates. Also manual cache flush command for emergencies."
     },
     {
       "id": 3,

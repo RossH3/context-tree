@@ -183,7 +183,7 @@ Before adding something to CLAUDE.md, ask:
 
 ## Part 5: Real Example
 
-Below is the root CLAUDE.md from a 50+ tenant SaaS application (Play Framework 2.0.4, Cassandra, ElasticSearch). This evolved over months of actual work, capturing real friction points.
+Below is the root CLAUDE.md from a production multi-tenant SaaS application. This evolved over months of actual work, capturing real friction points.
 
 **Notice:**
 - Critical concepts up front (terminology traps, architecture gotchas)
@@ -192,7 +192,7 @@ Below is the root CLAUDE.md from a 50+ tenant SaaS application (Play Framework 2
 - Under 200 lines total
 
 <details>
-<summary>Click to view: scribchoice/CLAUDE.md (production example)</summary>
+<summary>Click to view: Production CLAUDE.md Example</summary>
 
 ```markdown
 # Choice Project - Context Tree Navigation & Claude Code Guide
@@ -209,8 +209,8 @@ Below is the root CLAUDE.md from a 50+ tenant SaaS application (Play Framework 2
 1. **Opportunity = Process + School + Grade** - The central business entity
 2. **Applications are "Orders"** - Search for `Order` not `Application` in code
 3. **Multi-tenant by hostname** - Each district isolated by `clientid = hostname`
-4. **Cassandra = Primary Storage** - Source of truth for all data
-5. **ElasticSearch = Query Engine** - All queries go through ES, data pulled from Cassandra
+4. **Database A = Primary Storage** - Source of truth for all data
+5. **Database B = Query Engine** - All queries go through B, data pulled from A
 6. **Question Groups** - The foundation of dynamic form building
 
 ### First Day Checklist
@@ -223,9 +223,9 @@ Below is the root CLAUDE.md from a 50+ tenant SaaS application (Play Framework 2
 
 ## ⚡ Critical Context (Prevent Common Mistakes)
 - **Student Applications = "Order" objects** - Backend uses `Order`, UI says "applications". See [GLOSSARY.md](docs/GLOSSARY.md) for complete terminology mappings.
-- **Cassandra = Primary Storage, ElasticSearch = Query Engine** - See [ARCHITECTURE.md - Data Architecture](docs/ARCHITECTURE.md#data-architecture) for complete dual database pattern.
+- **Dual Database Pattern** - Primary storage is source of truth, separate query engine for reads. See [ARCHITECTURE.md - Data Architecture](docs/ARCHITECTURE.md#data-architecture) for complete pattern.
 - **Multi-tenancy by clientid** - EVERY query must filter by clientid (derived from hostname). See [ARCHITECTURE.md - Multi-Tenancy](docs/ARCHITECTURE.md#multi-tenancy-architecture).
-- **Technology Stack**: Play 2.0.4, Cassandra 1.2.12, ElasticSearch 1.7.6. See [ARCHITECTURE.md - Technology Stack](docs/ARCHITECTURE.md#technology-stack) for complete details.
+- **Technology Stack**: Legacy framework versions with specific constraints. See [ARCHITECTURE.md - Technology Stack](docs/ARCHITECTURE.md#technology-stack) for complete details.
 
 ## 🎯 What are you trying to do? (Quick Decision Tree)
 
@@ -270,7 +270,7 @@ Order order = oMan.getOrder(clientid, orderId);
 
 ### ❌ DON'T
 - Search for "Application" class when looking for applications (use "Order")
-- Assume traditional DAO pattern or modern Play 2.8+ patterns
+- Assume traditional DAO pattern or modern framework patterns
 - Look for normalized database tables (uses JSON blob storage)
 
 ### ✅ DO
@@ -370,4 +370,4 @@ That's it. That's the system.
 ---
 
 *Last updated: 2025-10-27*
-*Lessons learned from: scribchoice project (50+ tenant SaaS, 12K+ lines of initial docs, 6 months of iteration)*
+*Lessons learned from: Production multi-tenant SaaS project (12K+ lines of initial docs, 6 months of iteration)*
