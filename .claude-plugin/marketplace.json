@@ -1,0 +1,34 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "context-tree",
+  "version": "4.0.1",
+  "description": "Context Tree methodology toolkit - the committed, verified, team-shared knowledge layer for brownfield codebases. Complements Claude Code's auto-memory with code verification and domain expert interviews.",
+  "owner": {
+    "name": "Ross Hanahan",
+    "url": "https://github.com/RossH3"
+  },
+  "plugins": [
+    {
+      "name": "context-tree",
+      "description": "Build, maintain, and ingest into a committed Context Tree for brownfield codebases. Promotes signal from auto-memory into team-shared, code-verified documentation. Includes 3-phase build with domain expert interview, multi-source ingestion, and 5 composable maintenance skills.",
+      "version": "4.0.1",
+      "author": {
+        "name": "Ross Hanahan",
+        "url": "https://github.com/RossH3"
+      },
+      "source": "./plugins/context-tree",
+      "category": "documentation",
+      "keywords": [
+        "documentation",
+        "brownfield",
+        "context",
+        "ai",
+        "memory-promotion",
+        "domain-interview",
+        "institutional-knowledge",
+        "knowledge-compounding",
+        "claude-code-memory"
+      ]
+    }
+  ]
+}

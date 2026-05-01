@@ -1,0 +1,40 @@
+{
+  "name": "context-tree",
+  "version": "4.0.1",
+  "description": "The committed, verified, team-shared knowledge layer for brownfield codebases. Complements Claude Code auto-memory by promoting verified signal into team-shared docs. Includes 3-phase build with domain expert interview, multi-source ingestion, and 5 composable maintenance skills (rule-of-two-detector, drift-detector, tree-health, learning-capture, memory-promoter).",
+  "author": {
+    "name": "Ross Hanahan",
+    "url": "https://github.com/RossH3"
+  },
+  "homepage": "https://github.com/RossH3/context-tree",
+  "repository": "https://github.com/RossH3/context-tree",
+  "license": "MIT",
+  "keywords": [
+    "documentation",
+    "codebase",
+    "context",
+    "ai",
+    "brownfield",
+    "domain-interview",
+    "git-learning-signals",
+    "maintenance",
+    "institutional-knowledge",
+    "multi-source-ingestion",
+    "knowledge-compounding",
+    "claude-code-memory",
+    "memory-promotion"
+  ],
+  "commands": [
+    "./commands/build-context-tree.md",
+    "./commands/maintain-context-tree.md",
+    "./commands/ingest-context.md"
+  ],
+  "skills": [
+    "./skills/rule-of-two-detector",
+    "./skills/drift-detector",
+    "./skills/tree-health",
+    "./skills/learning-capture",
+    "./skills/memory-promoter"
+  ],
+  "agents": []
+}
