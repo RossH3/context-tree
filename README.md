@@ -13,26 +13,26 @@ Context Tree is documentation-as-code for AI assistants working in brownfield re
 
 ## Relationship to Claude Code's Memory
 
-Claude Code's **auto-memory** writes typed notes to `~/.claude/projects/<proj>/memory/` as you work. Anthropic also describes **dreaming**, an offline pass that reorganizes those notes, checks them against session transcripts, and finds patterns across sessions ([Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)). Together they handle the personal memory layer, including keeping it current.
+Claude Code's **auto-memory** writes typed notes to `~/.claude/projects/<proj>/memory/` as you work. Anthropic also ships **dreaming**, an offline pass that reorganizes a memory store, checks it against session transcripts, and surfaces patterns across sessions ([Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)). As of 2026-11-06, dreaming runs only in the Managed Agents API ([research preview](https://platform.claude.com/docs/en/managed-agents/dreams)); Claude Code documents no background consolidation. Curating personal memory is Anthropic's work either way, so Context Tree stays out of it.
 
 **Context Tree is the committed, code-verified, team-shared layer.** They are complementary:
 
-| | Auto-memory + dreaming | Context Tree |
+| | Anthropic memory | Context Tree |
 |---|---|---|
-| Author | Claude, in session and offline | Human + Claude, approval per change |
-| Verified against | Session transcripts | The code |
+| Author | Claude, in session (dreaming: offline job) | Human + Claude, approval per change |
+| Verified against | Session transcripts (dreaming) | The code |
 | Scope | Your machine, per project | Repo (committed, team-shared) |
 | Content | What Claude learned working with *you* | What's true about *this codebase* |
 | Lives in | `~/.claude/projects/<proj>/memory/` | `CLAUDE.md` + `docs/` in your repo |
 
-Context Tree treats auto-memory as a **read-only signal source** and leaves curation to dreaming. The `memory-promoter` skill (v4.0.0+) scans your local memory directory for rules and traps that belong in the committed tree, verifies them against code, and offers to promote them.
+Context Tree treats auto-memory as a **read-only signal source** and never writes to it. The `memory-promoter` skill (v4.0.0+) scans your local memory directory for rules and traps that belong in the committed tree, verifies them against code, and offers to promote them.
 
-See [RELATIONSHIP_TO_MEMORY.md](RELATIONSHIP_TO_MEMORY.md) for the full mapping, decision flow, and which skills overlap with dreaming.
+See [RELATIONSHIP_TO_MEMORY.md](RELATIONSHIP_TO_MEMORY.md) for the full mapping, decision flow, and skill status.
 
 ### What Context Tree Is Not
 
 - ❌ A replacement for auto-memory or dreaming (Anthropic's memory is good at what it does)
-- ❌ A memory curator (dreaming reorganizes and corrects memory; Context Tree never writes to it)
+- ❌ A memory curator (that's Anthropic's work; Context Tree never writes to memory)
 - ❌ Generic AI documentation methodology
 - ❌ Tool-agnostic
 - ❌ Greenfield project guidance
@@ -86,7 +86,7 @@ Install via Claude Code's plugin marketplace:
 
 **V4 Features:**
 - **3 commands:** `/build-context-tree`, `/maintain-context-tree`, `/ingest-context`
-- **5 composable skills:** `rule-of-two-detector`, `drift-detector`, `tree-health`, `learning-capture`, `memory-promoter`
+- **4 composable skills:** `learning-capture`, `drift-detector`, `tree-health`, `memory-promoter`
 - **Memory promotion:** Read auto-memory entries, verify against code, promote to committed tree (NEW in v4)
 - **Multi-source ingestion:** Process post-mortems, Slack exports, meeting notes into verified docs
 - **Frontmatter convention:** Generated docs carry typed frontmatter (aligned with auto-memory shape)
@@ -97,7 +97,6 @@ This installs:
 - Commands: Build workflow + maintenance orchestrator + multi-source ingestion
 - Skills: Each maintenance mode is now its own skill, plus the new memory-promoter
 - Workflow prompts: 3-phase build prompts + source ingestion prompt (markdown-based)
-- Supporting scripts: git-learning-detector.sh
 
 ### Usage
 
@@ -268,9 +267,8 @@ See [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md) for deepe
 
 **Plugin (what gets installed):**
 - `plugins/context-tree/commands/` — 3 commands: `build-context-tree`, `maintain-context-tree`, `ingest-context`
-- `plugins/context-tree/skills/` — 5 skills: `rule-of-two-detector`, `drift-detector`, `tree-health`, `learning-capture`, `memory-promoter`
+- `plugins/context-tree/skills/` — 4 skills: `learning-capture`, `drift-detector`, `tree-health`, `memory-promoter`
 - `plugins/context-tree/docs/workflow-prompts/` — 4 subagent prompts (codebase-discovery, domain-interview, doc-generator, source-ingestion)
-- `plugins/context-tree/git-learning-detector.sh` — Utility script for Rule of Two detection
 
 **Marketplace manifest (for sharing):**
 - `.claude-plugin/marketplace.json` — Repo-level manifest so teams can add this repo as a Claude Code marketplace
@@ -304,19 +302,18 @@ Process post-mortems, Slack exports, meeting notes, or any document. Each insigh
 /maintain-context-tree
 ```
 
-**Six options:**
-1. **Git Learning Analysis** - Detect repeated patterns from git history (Rule of Two violations)
-2. **Quality Audit** - Validate claims against code, prune stale content
+**Five options:**
+1. **Learning Review** - Read git history for recent learnings and repeated friction (Rule of Two)
+2. **Drift Detector** - Validate claims against code; scoped to docs whose code changed since last check
 3. **Health Check** - Quick validation of links, structure, file sizes
-4. **Learning Review** - Harvest undocumented learnings from recent git commits
-5. **Memory Promoter** - Verify auto-memory entries against code, promote stable ones to the tree
-6. **All** - Run options 1-5 in sequence (monthly maintenance)
+4. **Memory Promoter** - Verify auto-memory entries against code, promote stable ones to the tree
+5. **All** - Run options 1-4 in sequence (monthly maintenance)
 
 ### Session Insights
 
-Context Tree no longer offers to file insights mid-session; the Proactive Capture nudge was retired in v4.1.0. Auto-memory captures session insights and dreaming curates them. Run `memory-promoter` (option 5 of `/maintain-context-tree`) to verify the stable ones against code and promote them into the tree.
+Context Tree no longer offers to file insights mid-session; the Proactive Capture nudge was retired in v4.1.0. Auto-memory already captures session insights. Run `memory-promoter` (option 4 of `/maintain-context-tree`) to verify the stable ones against code and promote them into the tree.
 
-One exception: if work shows a Context Tree doc is wrong, Claude flags it and offers a fix, since dreaming corrects memory, not committed docs.
+One exception: if work shows a Context Tree doc is wrong, Claude flags it and offers a fix, since auto-memory never touches committed docs.
 
 ### Natural Capture
 
@@ -340,79 +337,7 @@ See [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md) for deepe
 
 ## Utilities
 
-### Git Learning Detector
-
-**Analyzes git history to detect "Rule of Two" violations** - patterns indicating documentation opportunities.
-
-The git-learning-detector identifies when the same issue appears twice in commit history, signaling it's time to document before the third occurrence.
-
-#### What It Detects
-
-1. **Repeated fix patterns** - Same issue fixed in different files (Common Pitfalls candidates)
-2. **Defensive comments** - IMPORTANT/DON'T/NEVER added to code (pain signals)
-3. **High churn files** - Files changed repeatedly (confusion zones)
-4. **Terminology inconsistencies** - Multiple names for same concept (GLOSSARY candidates)
-5. **Learning signals** - Commits with "TIL", "learned", "figured out", "gotcha"
-
-#### Usage
-
-```bash
-# Download and run standalone
-curl -sSL https://raw.githubusercontent.com/RossH3/context-tree/main/git-learning-detector.sh | bash
-
-# Or clone and run locally
-./git-learning-detector.sh [options]
-
-# Options
-./git-learning-detector.sh --since=6.months  # Analyze last 6 months
-./git-learning-detector.sh --help            # Show all options
-```
-
-#### Output Example
-
-```
-=== GIT LEARNING DETECTOR ===
-
-1. REPEATED FIX PATTERNS
-  [3x] add clientid filter
-  [2x] handle null organization
-
-  → Suggestion: Add to CLAUDE.md Common Pitfalls
-  Format: ❌ DON'T [common mistake] / ✅ DO [correct approach]
-
-2. DEFENSIVE COMMENTS ADDED
-  Found 15 defensive comments. Examples:
-    + // IMPORTANT: All queries must include tenantid filter
-    + // DON'T refactor InternalAuthPlugin - shared dependency
-
-  → Suggestion: Review these warnings and add to CLAUDE.md
-
-3. HIGH CHURN FILES
-  12 changes: app/services/CoreService.java
-   8 changes: app/controllers/EntryController.java
-
-  → Suggestion: High churn indicates confusion - document patterns
-
-4. TERMINOLOGY INCONSISTENCIES
-  Organization ID variations:
-    127x orgId
-     34x org_id
-     12x organizationId
-
-  → Suggestion: Add to docs/GLOSSARY.md with preferred naming
-```
-
-#### Integration with Maintenance Workflow
-
-Run monthly as part of context tree maintenance:
-
-1. `./git-learning-detector.sh --since=1.month`
-2. Review detected patterns (frequency ≥ 2)
-3. Verify against code
-4. Add 2-3 lines to appropriate location (CLAUDE.md, GLOSSARY.md, etc.)
-5. Commit: `docs: capture learning from git history`
-
-**This creates a feedback loop:** Git history reveals what developers struggle with → Document it → Struggles decrease → Signal-to-noise ratio improves.
+The `git-learning-detector.sh` regex script was retired in v4.2.0. On a real repo it mostly matched committed tool output and diagrams instead of warnings people wrote. `learning-capture` now reads git history with model judgment, using the same signals. The script and the finding are kept in [`historical/RULE_OF_TWO_DETECTOR.md`](historical/RULE_OF_TWO_DETECTOR.md).
 
 ---
 

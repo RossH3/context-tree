@@ -83,7 +83,7 @@ Report docs missing frontmatter. Don't auto-add — flag for the user (frontmatt
 
 ```
 ⚠️ Last update 45 days ago
-   Run rule-of-two-detector for new patterns
+   Run learning-capture (Learning Review) for new patterns
    Run drift-detector to validate claims still hold
 ```
 
@@ -106,7 +106,7 @@ Recommended next step: Run drift-detector to validate ARCHITECTURE claims.
 ## What This Skill Does NOT Do
 
 - Does **not** verify whether claims are true (that's `drift-detector`)
-- Does **not** look at git history (that's `rule-of-two-detector`)
+- Does **not** look at git history (that's `learning-capture`)
 - Does **not** harvest insights (that's `learning-capture` or `memory-promoter`)
 
 Stay narrow. Health is structural, not semantic.

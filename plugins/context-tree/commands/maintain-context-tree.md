@@ -15,29 +15,26 @@ Context Tree Maintenance (v4)
 
 Choose an option:
 
-1. Rule-of-Two Detector (~5 min)
-   → Analyze git history for repeated patterns
-   → Identifies what to document based on team behavior
+1. Learning Review (~5-10 min)
+   → Read git history for recent learnings and repeated friction (Rule of Two)
+   → Model judges what matters; verified against code
 
-2. Drift Detector (~10 min)
+2. Drift Detector (~5-10 min)
    → Validate doc claims against code
-   → Fix or remove stale content
+   → Scoped to docs whose code changed since last check (full sweep on request)
 
 3. Tree Health (~2 min)
    → Quick structural check: links, sizes, frontmatter, knowledge.yaml
 
-4. Learning Capture / Review (~5-10 min)
-   → Harvest undocumented learnings from recent git activity
-
-5. Memory Promoter (~3-5 min) [v4]
-   → Scan ~/.claude/projects/<proj>/memory/ for entries to promote
+4. Memory Promoter (~3-5 min)
+   → Scan ~/.claude/projects/<proj>/memory/ for rules and traps to promote
    → Verify against code, offer to file into committed Context Tree
 
-6. All (full maintenance run)
-   → Runs 1, 2, 3, 4, 5 in sequence
+5. All (full maintenance run)
+   → Runs 1, 2, 3, 4 in sequence
    → Recommended monthly
 
-What would you like to do? (1-6)
+What would you like to do? (1-5)
 ```
 
 ---
@@ -46,26 +43,24 @@ What would you like to do? (1-6)
 
 | Option | Skill invoked |
 |---|---|
-| 1 | `rule-of-two-detector` |
+| 1 | `learning-capture` (Learning Review) |
 | 2 | `drift-detector` |
 | 3 | `tree-health` |
-| 4 | `learning-capture` (Learning Review mode) |
-| 5 | `memory-promoter` |
-| 6 | All five, in order |
+| 4 | `memory-promoter` |
+| 5 | All four, in order |
 
 Each skill's SKILL.md contains its full execution logic. This command does **not** duplicate that logic — it routes.
 
 ---
 
-## Option 6: Full Maintenance Run
+## Option 5: Full Maintenance Run
 
 Run skills in this order:
 
 1. `tree-health` first (cheap structural check; surfaces issues that affect later skills)
 2. `drift-detector` (fix incorrect claims before adding new ones)
-3. `rule-of-two-detector` (long-horizon team patterns)
-4. `learning-capture` (recent individual learnings)
-5. `memory-promoter` (promote auto-memory signal that has stabilized)
+3. `learning-capture` (recent learnings and repeated friction from git history)
+4. `memory-promoter` (promote auto-memory signal that has stabilized)
 
 After each skill completes, summarize what it changed before invoking the next.
 
@@ -80,11 +75,8 @@ Tree Health:
 Drift Detector:
 - [claims fixed / pruned]
 
-Rule-of-Two Detector:
-- [patterns found / documented]
-
-Learning Capture:
-- [recent learnings filed]
+Learning Review:
+- [learnings and repeated patterns filed]
 
 Memory Promoter:
 - [memory entries promoted to tree]
@@ -100,7 +92,7 @@ When the user says something like:
 
 > "I just figured out webhooks use HMAC auth, not bearer tokens. Should we document this?"
 
-Respond naturally — don't make them pick a menu option. Verify against code, draft 2-5 lines, show the target location, apply on approval. Don't offer unprompted capture during normal work; auto-memory and dreaming handle session insights, and `memory-promoter` brings the stable ones into the tree.
+Respond naturally — don't make them pick a menu option. Verify against code, draft 2-5 lines, show the target location, apply on approval. Don't offer unprompted capture during normal work; auto-memory already captures session insights, and `memory-promoter` brings the stable ones into the tree.
 
 ---
 
@@ -108,7 +100,7 @@ Respond naturally — don't make them pick a menu option. Verify against code, d
 
 - This command operates on **existing** Context Trees. For initial build, use `/build-context-tree`.
 - For external source ingestion (post-mortems, Slack threads, wikis), use `/ingest-context`.
-- For promoting personal auto-memory entries to the committed tree, use option 5 here, or invoke `memory-promoter` directly.
+- For promoting personal auto-memory entries to the committed tree, use option 4 here, or invoke `memory-promoter` directly.
 - Quality gates apply at every step. Every change verified against code. User approves every addition.
 
 ---

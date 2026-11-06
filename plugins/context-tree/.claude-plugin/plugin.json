@@ -1,7 +1,7 @@
 {
   "name": "context-tree",
-  "version": "4.1.0",
-  "description": "The committed, verified, team-shared knowledge layer for brownfield codebases. Complements Claude Code auto-memory by promoting verified signal into team-shared docs. Includes 3-phase build with domain expert interview, multi-source ingestion, and 5 composable maintenance skills (rule-of-two-detector, drift-detector, tree-health, learning-capture, memory-promoter).",
+  "version": "4.2.0",
+  "description": "The committed, verified, team-shared knowledge layer for brownfield codebases. Complements Claude Code auto-memory by promoting verified signal into team-shared docs. Includes 3-phase build with domain expert interview, multi-source ingestion, and 4 composable maintenance skills (learning-capture, drift-detector, tree-health, memory-promoter).",
   "author": {
     "name": "Ross Hanahan",
     "url": "https://github.com/RossH3"
@@ -30,7 +30,6 @@
     "./commands/ingest-context.md"
   ],
   "skills": [
-    "./skills/rule-of-two-detector",
     "./skills/drift-detector",
     "./skills/tree-health",
     "./skills/learning-capture",

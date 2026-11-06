@@ -5,6 +5,25 @@ All notable changes to the Context Tree project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-11-06
+
+### Fixed
+
+- **Dreaming is not part of Claude Code.** 4.1.0 said dreaming curates Claude Code's auto-memory. It doesn't: dreaming is a Managed Agents API job in research preview ([Dreams](https://platform.claude.com/docs/en/managed-agents/dreams)), and Claude Code documents no background consolidation; its memory files "stay until you or Claude edits or deletes them" ([memory docs](https://code.claude.com/docs/en/memory)). The direction is unchanged: curating memory is Anthropic's work, so Context Tree still doesn't do it. `RELATIONSHIP_TO_MEMORY.md`, `README.md`, `CLAUDE.md`, and skill wording corrected.
+
+### Removed
+
+- **`rule-of-two-detector` skill.** Folded into `learning-capture`. Its regex script reported 207 "defensive comments" on a production repo over three months, mostly SSH warnings and SVG diagram text committed to the repo. The five signals stay, as guidance the model applies with judgment rather than rules it scores. Script moved to `historical/git-learning-detector.sh`; the finding is written up in `historical/RULE_OF_TWO_DETECTOR.md`.
+
+### Changed
+
+- **`learning-capture`** now covers both recent learnings (weeks) and repeated friction (months, the Rule of Two) from git history.
+- **`drift-detector` is scoped by default.** It always checks root `CLAUDE.md`, then audits only docs whose referenced code changed since the doc's `verified:` date (or last commit), plus docs whose references no longer exist. Stable docs are skipped; unanchored docs are listed. Full sweep on request, after major rewrites, or before a handoff.
+- **`memory-promoter`** no longer suggests memory pruning or edits; it reports contradictions and skip counts only. New `status` skip category: progress and next steps don't promote. `project` memories promote as rules, traps, and decisions.
+- **`/maintain-context-tree` menu** is now five options: Learning Review, Drift Detector, Tree Health, Memory Promoter, All.
+
+---
+
 ## [4.1.0] - 2026-11-06
 
 ### Removed
@@ -23,11 +42,6 @@ Anthropic's [Components of agent memory](https://www.anthropic.com/research/comp
 - **`RELATIONSHIP_TO_MEMORY.md` rewritten.** Context Tree is now framed by what dreaming does not cover: verification against code (transcripts are a different ground truth), team scope through git, and the domain expert interview. Adds a table mapping the article's findings to existing Context Tree principles, and a per-skill overlap table.
 - **New principle: promote rules and traps, not status.** A hand-run prune of a 162-file project memory (to 123) found that status notes had rotted and contradicted each other, while short rule-shaped notes stayed correct. The decision flow now routes status to repo work files.
 - **`README.md` and `CLAUDE.md`** updated to match.
-
-### Recommended, not yet applied
-
-- Keep `memory-promoter` scoped to verify-and-promote. No memory hygiene.
-- Consider folding Learning Review into `rule-of-two-detector`.
 
 ---
 

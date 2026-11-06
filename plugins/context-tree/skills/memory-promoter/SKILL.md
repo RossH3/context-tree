@@ -17,7 +17,7 @@ Anthropic's auto-memory captures things Claude observes during your sessions and
 
 ## When to Run
 
-- `/maintain-context-tree` (option 5)
+- `/maintain-context-tree` (option 4)
 - After accumulated session work — when several memory entries have been written that you suspect contain codebase-level truths
 - Periodically (monthly, alongside other maintenance)
 
@@ -65,7 +65,7 @@ The `type` field drives the promotion mapping below.
 |---|---|---|
 | `user` | **Skip — never promote** | Stays in memory (it's about the human) |
 | `feedback` | Maybe (only if generalizable beyond one user) | Root `CLAUDE.md` (working preferences section) |
-| `project` | Strong candidate | `BUSINESS_CONTEXT.md` or `TROUBLESHOOTING.md` |
+| `project` | Strong candidate for rules, traps, and decisions; skip status | `BUSINESS_CONTEXT.md` or `TROUBLESHOOTING.md` |
 | `reference` | Strong candidate | `GLOSSARY.md`, `ARCHITECTURE.md`, or `AI_STRATEGIES.md` (depending on content) |
 
 **The rule on `feedback`:** Memory writes "this user prefers X" but the committed Context Tree must speak in collective voice. Only promote `feedback` entries when the preference would be correct for any teammate working in the repo (e.g., "use the Bun dev script, not npm run dev" — true for everyone). Personal preferences ("Ross likes terse responses") stay in memory.
@@ -100,9 +100,10 @@ When skipping a memory entry, classify the reason — don't lump everything as "
 | `local-machine-context` | Paths or env specific to this user's laptop | "the related-project is at ~/projects/related-project" |
 | `index-pointer` | A MEMORY.md section that just links to topic files; the topic files are the real candidates | "## Infrastructure: see project_X.md" |
 | `already-productized` | The memory's content has been turned into a skill or tool | "Bitbucket→GitHub migration runbook" (now a skill) |
+| `status` | Progress, blockers, next steps, dates. Status rots; it belongs in work files, not the tree | "Release 2.4 is on staging, waiting on QA" |
 | `already-documented` | The fact is already in the Context Tree | (this is `EXISTING` from Step 5; report distinctly from above) |
 
-Report counts per category in the summary table. Catching a growing `meta-feedback` count over time means auto-memory is collecting commentary on past sessions and probably needs human pruning.
+Report counts per category in the summary table. Report only; memory upkeep is outside this skill.
 
 ---
 
@@ -118,7 +119,7 @@ Same verification discipline as `/ingest-context`. For each candidate:
    - **Source-attested** — cannot verify against code (e.g., business decision); promote only if the memory entry attributes a source
    - **Contradicted** — code disagrees. **Reject and surface for the user** (this means auto-memory captured something stale or wrong)
 
-Contradicted is interesting: it may signal that the user's auto-memory has incorrect information that should be deleted. Surface this. The user can ask Claude to update the memory file (we don't do it for them — that's user-initiated maintenance of their own memory).
+List contradicted entries in the summary so the user knows the memory is wrong. Don't suggest edits or pruning; memory is Anthropic's surface and the user's to manage.
 
 ---
 
@@ -187,7 +188,8 @@ Append to `docs/context-tree-build/promotion-log.md` (create if absent):
 **Already documented:** N
 **Skipped by category:**
 - personal-preference: N
-- meta-feedback: N (watch this — high counts mean memory is accumulating self-reflection cruft)
+- meta-feedback: N
+- status: N
 - local-machine-context: N
 - index-pointer: N
 - already-productized: N
@@ -199,7 +201,6 @@ Append to `docs/context-tree-build/promotion-log.md` (create if absent):
 
 ### Contradicted (memory disagrees with code):
 1. [memory entry path] — [what memory says vs what code shows]
-   → User may want to update the memory file
 ```
 
 ---
@@ -227,4 +228,4 @@ Both use the same verification + deduplication + user-approval discipline. The d
 
 ---
 
-**Run when:** `/maintain-context-tree` (option 5), or whenever the user wants to review what auto-memory has accumulated and promote signal into the committed tree.
+**Run when:** `/maintain-context-tree` (option 4), or whenever the user wants to review what auto-memory has accumulated and promote signal into the committed tree.

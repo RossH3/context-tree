@@ -10,14 +10,14 @@ This is the **plugin development repository** for Context Tree — a Claude Code
 
 **Users install this plugin from a marketplace (this repo, or a downstream copy).** This repo is for developing and maintaining the plugin itself.
 
-## Defining Frame (post-auto-memory, post-dreaming)
+## Defining Frame (post-auto-memory)
 
-Anthropic's Claude Code ships auto-memory (`~/.claude/projects/<proj>/memory/`), a personal, machine-local layer. Anthropic also describes **dreaming**, an offline pass that reorganizes memory, checks notes against session transcripts, and finds patterns across sessions ([Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)). Together they cover the personal memory stack, including the curation work Context Tree used to do by hand. **Context Tree is the committed, code-verified, team-shared layer.** They are complementary:
+Anthropic's Claude Code ships auto-memory (`~/.claude/projects/<proj>/memory/`), a personal, machine-local layer. Anthropic also ships **dreaming**, an offline pass that reorganizes a memory store, checks it against session transcripts, and surfaces patterns across sessions ([Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)). As of 2026-11-06 dreaming runs only in the Managed Agents API (research preview); Claude Code documents no background consolidation. Either way, curating personal memory is Anthropic's work, not this plugin's. **Context Tree is the committed, code-verified, team-shared layer.** They are complementary:
 
-- Auto-memory + dreaming capture and curate what Claude learns working with *you*. Personal scope; verified against transcripts.
+- Auto-memory captures what Claude learns working with *you*. Personal scope; no code verification.
 - Context Tree captures what is true about *the codebase*. Repo scope, committed to git, verified against code, reviewed in PRs.
 
-When designing plugin features, the test is: *do auto-memory or dreaming already do this?* If yes, don't reimplement; read from memory instead. Never build memory curation (dedupe, prune, reorganize); that is dreaming's job. The plugin's value is everything Anthropic's memory structurally cannot do: code verification, team sharing via git, quality gates that reject bad context, and the domain expert interview.
+When designing plugin features, the test is: *is Anthropic doing this, or clearly heading there?* If yes, don't reimplement; read from memory instead. Never build memory curation (dedupe, prune, reorganize). The plugin's value is everything Anthropic's memory structurally cannot do: code verification, team sharing via git, quality gates that reject bad context, and the domain expert interview.
 
 See `RELATIONSHIP_TO_MEMORY.md` for the full mapping.
 
@@ -28,7 +28,7 @@ See `RELATIONSHIP_TO_MEMORY.md` for the full mapping.
 ### For Understanding the Plugin
 
 **Start here:**
-- `RELATIONSHIP_TO_MEMORY.md` — How Context Tree relates to Anthropic auto-memory and dreaming, plus per-skill overlap status ⭐ START HERE
+- `RELATIONSHIP_TO_MEMORY.md` — How Context Tree relates to Anthropic auto-memory and dreaming, plus per-skill status ⭐ START HERE
 - `AI_DOCUMENTATION_FIELD_GUIDE.md` — Practical lessons, real examples from production use
 - `README.md` — Plugin overview, installation, usage
 - `CONTEXT_TREE_PRINCIPLES.md` — Core theory: signal-to-noise, verification discipline
@@ -46,15 +46,14 @@ See `RELATIONSHIP_TO_MEMORY.md` for the full mapping.
 - `plugins/context-tree/docs/workflow-prompts/doc-generator.md` — Phase 3 (emits frontmatter, optional knowledge.yaml)
 - `plugins/context-tree/docs/workflow-prompts/source-ingestion.md` — External source insight extraction
 
-**Skills (5 composable) — context-dependent behaviors:**
-- `rule-of-two-detector` — Detects repeated patterns in git history (was Mode 1)
-- `drift-detector` — Validates doc claims against code, prunes stale content (was Mode 2)
+**Skills (4 composable) — context-dependent behaviors:**
+- `drift-detector` — Validates doc claims against code, prunes stale content (was Mode 2). Scoped by default to docs whose referenced code changed since last check
 - `tree-health` — Link/structure/size validation (was Mode 3)
-- `learning-capture` — Harvests undocumented learnings from git history (was Mode 4); flags Context Tree docs that work shows are wrong. Proactive in-flow nudge retired in v4.1.0 (overlapped with dreaming)
+- `learning-capture` — Learning Review: reads git history for recent learnings and repeated friction (Rule of Two), with model judgment instead of a regex script; flags Context Tree docs that work shows are wrong. Absorbed `rule-of-two-detector` in v4.2.0; in-flow nudge retired in v4.1.0
 - `memory-promoter` — **NEW v4** — Reads auto-memory, verifies against code, promotes signal to committed tree. Scope is verify-and-promote only; no memory hygiene
 
 **Utilities:**
-- `plugins/context-tree/git-learning-detector.sh` — Shell script for Rule of Two detection
+- `historical/git-learning-detector.sh` — Retired regex script for Rule of Two detection; see `historical/RULE_OF_TWO_DETECTOR.md`
 
 ### Historical Context
 
@@ -71,7 +70,7 @@ See `RELATIONSHIP_TO_MEMORY.md` for the full mapping.
 
 plugins/context-tree/
 ├── .claude-plugin/
-│   └── plugin.json                # Plugin metadata (v4.1.0)
+│   └── plugin.json                # Plugin metadata (v4.2.0)
 ├── commands/
 │   ├── build-context-tree.md      # Main 3-phase orchestrator
 │   ├── maintain-context-tree.md   # Thin orchestrator -> maintenance skills
@@ -79,12 +78,10 @@ plugins/context-tree/
 ├── docs/
 │   └── workflow-prompts/          # Subagent prompts (4 total)
 ├── skills/
-│   ├── rule-of-two-detector/      # Git pattern detection
 │   ├── drift-detector/            # Doc claims vs code validation
 │   ├── tree-health/               # Structure/link/size checks
-│   ├── learning-capture/          # Recent learnings from git + doc contradictions
+│   ├── learning-capture/          # Learning Review (git history, Rule of Two) + doc contradictions
 │   └── memory-promoter/           # Auto-memory -> committed tree (NEW v4)
-└── git-learning-detector.sh       # Utility script
 ```
 
 ---
@@ -99,17 +96,22 @@ From 9+ months of production experimentation:
 4. **Quality over quantity** — Better no doc than bad doc
 5. **Domain expert interview = unique value** — AI can't extract institutional knowledge
 6. **Knowledge compounds** — Everyday work insights should flow back into docs, not evaporate
-7. **Read from auto-memory, never write** (V4) — Anthropic owns the personal layer, and dreaming keeps it current; we promote signal up into the committed tree
+7. **Read from auto-memory, never write** (V4) — Anthropic owns the personal layer and its curation; we promote signal up into the committed tree
 8. **Promote rules and traps, not status** — Status rots; short rule-shaped facts ("never do X", "looks like Y but is Z") stay correct. Status belongs in work files
 
 ---
 
 ## Development Notes
 
-**V4.1 (current release): post-dreaming reframe**
+**V4.2 (current release):**
+- `rule-of-two-detector` folded into `learning-capture`; its regex script moved to `historical/` (mostly noise in production)
+- `drift-detector` scoped to docs whose referenced code changed since last check
+- `memory-promoter` trimmed to verify-and-promote; new `status` skip category
+- Corrected: dreaming is a Managed Agents API feature, not part of Claude Code
+
+**V4.1: post-dreaming reframe**
 - `RELATIONSHIP_TO_MEMORY.md` rewritten around dreaming: transcripts vs. code as ground truth, team scope, the interview
-- Per-skill overlap table: `drift-detector` core; `memory-promoter` narrowed
-- `learning-capture` proactive in-flow nudge retired; Learning Review and doc-contradiction flagging kept
+- `learning-capture` proactive in-flow nudge retired
 
 **V4:**
 - Reframed around Anthropic's auto-memory: Context Tree = committed/verified/team-shared layer
@@ -131,7 +133,7 @@ From 9+ months of production experimentation:
 - Markdown working files (no JSON artifacts)
 
 **Philosophy:**
-"The elaborate methodology taught these lessons. You don't need the methodology anymore — just the lessons. And the lessons should compound. Auto-memory captures friction and dreaming curates it; Context Tree verifies it against code and compounds it into shared knowledge."
+"The elaborate methodology taught these lessons. You don't need the methodology anymore — just the lessons. And the lessons should compound. Auto-memory captures friction; Context Tree verifies it against code and compounds it into shared knowledge."
 
 ---
 
