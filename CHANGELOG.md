@@ -5,6 +5,25 @@ All notable changes to the Context Tree project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed: reframed around dreaming (docs only)
+
+Anthropic's [Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) describes dreaming: an offline pass that reorganizes memory, checks notes against session transcripts, and finds patterns across sessions. That is the curation work Context Tree had been doing by hand, so the plugin no longer treats memory upkeep as a gap to fill.
+
+- **`RELATIONSHIP_TO_MEMORY.md` rewritten.** Context Tree is now framed by what dreaming does not cover: verification against code (transcripts are a different ground truth), team scope through git, and the domain expert interview. Adds a table mapping the article's findings to existing Context Tree principles, and a per-skill overlap table.
+- **New principle: promote rules and traps, not status.** A hand-run prune of a 162-file project memory (to 123) found that status notes had rotted and contradicted each other, while short rule-shaped notes stayed correct. The decision flow now routes status to repo work files.
+- **`README.md` and `CLAUDE.md`** updated to match.
+
+### Recommended, not yet applied
+
+- Retire `learning-capture`'s proactive in-flow nudge; auto-memory plus dreaming cover it. Keep Learning Review (git history), or fold it into `rule-of-two-detector`.
+- Keep `memory-promoter` scoped to verify-and-promote. No memory hygiene.
+
+No skill, command, or plugin version changes in this entry.
+
+---
+
 ## [4.0.1] - 2026-05-01
 
 ### Shakedown fixes — five real issues from first install

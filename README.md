@@ -11,27 +11,28 @@ Context Tree is documentation-as-code for AI assistants working in brownfield re
 - **Discipline:** Verified against code, not docs. Bad context is worse than bad code.
 - **Origin:** Domain expert interviews + code verification + Rule-of-Two capture during everyday work.
 
-## Relationship to Claude Code's Auto-Memory
+## Relationship to Claude Code's Memory
 
-As of Claude Code v2.1.59+, Anthropic ships an **auto-memory** feature — Claude observes corrections during your sessions and writes typed notes to `~/.claude/projects/<proj>/memory/`. That's a personal, machine-local layer.
+Claude Code's **auto-memory** writes typed notes to `~/.claude/projects/<proj>/memory/` as you work. Anthropic also describes **dreaming**, an offline pass that reorganizes those notes, checks them against session transcripts, and finds patterns across sessions ([Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)). Together they handle the personal memory layer, including keeping it current.
 
-**Context Tree is the committed, verified, team-shared layer.** They are complementary:
+**Context Tree is the committed, code-verified, team-shared layer.** They are complementary:
 
-| | Auto-memory | Context Tree |
+| | Auto-memory + dreaming | Context Tree |
 |---|---|---|
-| Author | Claude (passive) | Human + Claude (active discipline) |
-| Verification | None | Required against code |
+| Author | Claude, in session and offline | Human + Claude, approval per change |
+| Verified against | Session transcripts | The code |
 | Scope | Your machine, per project | Repo (committed, team-shared) |
-| Content | What Claude learned about *you* | What's true about *this codebase* |
+| Content | What Claude learned working with *you* | What's true about *this codebase* |
 | Lives in | `~/.claude/projects/<proj>/memory/` | `CLAUDE.md` + `docs/` in your repo |
 
-Context Tree treats auto-memory as a **read-only signal source**. The `memory-promoter` skill (v4.0.0+) scans your local memory directory for entries whose content belongs in the committed tree, verifies them against code, and offers to promote them. Auto-memory is your personal scratchpad; Context Tree is the team's shared knowledge.
+Context Tree treats auto-memory as a **read-only signal source** and leaves curation to dreaming. The `memory-promoter` skill (v4.0.0+) scans your local memory directory for rules and traps that belong in the committed tree, verifies them against code, and offers to promote them.
 
-See [RELATIONSHIP_TO_MEMORY.md](RELATIONSHIP_TO_MEMORY.md) for the full mapping and decision flow.
+See [RELATIONSHIP_TO_MEMORY.md](RELATIONSHIP_TO_MEMORY.md) for the full mapping, decision flow, and which skills overlap with dreaming.
 
 ### What Context Tree Is Not
 
-- ❌ A replacement for auto-memory (it's not — auto-memory is great at what it does)
+- ❌ A replacement for auto-memory or dreaming (Anthropic's memory is good at what it does)
+- ❌ A memory curator (dreaming reorganizes and corrects memory; Context Tree never writes to it)
 - ❌ Generic AI documentation methodology
 - ❌ Tool-agnostic
 - ❌ Greenfield project guidance
@@ -275,7 +276,7 @@ See [AI_DOCUMENTATION_FIELD_GUIDE.md](AI_DOCUMENTATION_FIELD_GUIDE.md) for deepe
 - `.claude-plugin/marketplace.json` — Repo-level manifest so teams can add this repo as a Claude Code marketplace
 
 **Reference Documentation:**
-- `RELATIONSHIP_TO_MEMORY.md` — How Context Tree relates to Anthropic auto-memory ⭐ START HERE
+- `RELATIONSHIP_TO_MEMORY.md` — How Context Tree relates to Anthropic auto-memory and dreaming ⭐ START HERE
 - `AI_DOCUMENTATION_FIELD_GUIDE.md` — Practical lessons and examples
 - `CONTEXT_TREE_PRINCIPLES.md` — Deep dive on signal-to-noise, verification discipline
 - `CHANGELOG.md` — Version history (v4 manifesto entry at top)
@@ -320,6 +321,8 @@ Want me to file it into ARCHITECTURE.md? (y/n)
 ```
 
 Lightweight, easy to dismiss, ensures valuable insights don't evaporate into chat history.
+
+> **Note:** This in-flow nudge overlaps with auto-memory and dreaming, which already capture and curate session insights. It is still active in v4.0.1 but recommended for retirement; promote stabilized insights with `memory-promoter` instead. See [RELATIONSHIP_TO_MEMORY.md](RELATIONSHIP_TO_MEMORY.md#skill-status-after-dreaming).
 
 ### Natural Capture
 

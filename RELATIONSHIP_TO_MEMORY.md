@@ -1,71 +1,95 @@
 # Context Tree and Claude Code Memory
 
-**How Context Tree relates to Anthropic's auto-memory feature**
+**How Context Tree relates to Anthropic's auto-memory and dreaming**
 
 ---
 
 ## TL;DR
 
-| | Auto-memory (Anthropic) | Context Tree (this plugin) |
-|---|---|---|
-| Author | Claude (passive observation) | Human + Claude (active discipline) |
-| Verification | None | Required against code |
-| Scope | User's machine, per project | Repo (committed, team-shared) |
-| Content | What Claude learned about *me* | What's true about *this codebase* |
-| Trigger | Implicit (corrections) | Explicit (Rule of Two, interview, ingest) |
-| Quality gate | None | "Better no doc than bad doc" |
-| Lives in | `~/.claude/projects/<proj>/memory/` | `CLAUDE.md` + `docs/` (in repo) |
+Anthropic now covers the whole personal memory stack. Auto-memory writes notes during sessions. Dreaming, an offline pass, reorganizes them, checks them against session transcripts, and finds patterns across sessions ([Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)). That is the curation work Context Tree used to do by hand, and Anthropic does it better.
 
-**They are complementary, not competitive.** Auto-memory is your personal scratchpad. Context Tree is the committed institutional knowledge layer for the codebase.
+Context Tree keeps the one layer dreaming does not reach: docs **committed to the repo, verified against code, and reviewed by the team**.
+
+| | Auto-memory + dreaming (Anthropic) | Context Tree (this plugin) |
+|---|---|---|
+| Author | Claude, in session and in offline passes | Human + Claude, with approval per change |
+| Ground truth for verification | Session transcripts | The code |
+| Scope | One user's machine, per project | The repo: committed, team-shared |
+| Content | What Claude learned while working with *you* | What is true about *this codebase* |
+| Curation | Dreaming: reorganize, correct, dedupe | Drift checks and PR review |
+| Quality gate | Claude's judgment of salience | "Better no doc than bad doc" |
+| Lives in | `~/.claude/projects/<proj>/memory/` | `CLAUDE.md` + `docs/` (in repo) |
 
 ---
 
-## The boundary
+## What changed
 
-Auto-memory captures what Claude observes about you and your work *as you go*. It survives sessions but stays on your machine. Anthropic designed it to be lightweight, automatic, and personal — there is no verification step, no quality gate, and nothing to commit.
+Before dreaming, auto-memory only wrote notes. Nothing kept them current, so Context Tree took on curation work: catching stale notes, contradictions, and repeated friction, and deciding what deserved a permanent home.
 
-Context Tree captures what is *true about the codebase*, verified against code, written down to be shared with the team. It is committed to git, reviewed in PRs, and read by every Claude Code session in the repo (yours and your teammates').
+The article describes dreaming as doing that work:
 
-Stated as a rule:
+- Moving information between layers: transcripts → notes → wikis → injected context.
+- Checking notes against transcripts and correcting wrong ones.
+- Searching across sessions for shared patterns and repeated mistakes.
+- Keeping the injected layer small, with detail moved down and links left behind.
 
-> Auto-memory is for facts about the *human and their working style*. Context Tree is for facts about the *codebase and its institutional knowledge*.
+**Consequence for this plugin:** don't build memory curation. Anything that dedupes, prunes, or reorganizes `~/.claude/projects/<proj>/memory/` duplicates dreaming. That was always off-limits (Context Tree never writes to auto-memory), and now there's no gap to fill either.
 
-When in doubt: if the fact would be wrong for a teammate, it belongs in auto-memory. If the fact would be wrong for *the codebase six months from now*, it doesn't belong anywhere — fix the underlying issue.
+---
+
+## What dreaming does not cover
+
+Context Tree is worth keeping for three structural reasons:
+
+1. **Code is a different ground truth from transcripts.** A transcript records what happened in a session. It can confirm that a command failed or that a file was read. It cannot confirm that the code still behaves the way a note says after someone else's commit. Context Tree verifies claims with grep and file reads against the current tree. A memory-promoter run caught a memory claiming a config value was removed when the Dockerfile set it to 300 MB. A transcript check would not have caught that.
+2. **Team scope.** The article covers agents sharing a log, not people sharing knowledge through a repo. Memory stays on one machine. Context Tree goes through git, gets reviewed in PRs, and reaches every teammate's sessions, including a team that inherits the repo.
+3. **Institutional knowledge.** The domain expert interview captures what no session ever saw: why a decision was made, what the business rule really is, which tenant is the exception. Dreaming can only reorganize what was already written down.
+
+---
+
+## Lessons the article confirms
+
+These were Context Tree principles before the article. The research backs them, and they now shape what gets promoted:
+
+| Article finding | Context Tree principle |
+|---|---|
+| Salience matters more than volume. One run wrote 413 files and earned one badge; another wrote 9 files and earned four. | Signal-to-noise. Every line earns its token cost. |
+| Don't store what the environment already shows. Store strategy and tested rules. | Don't document what the code says. Document what it doesn't. |
+| Wikis bloat (one reached 1.77× its source corpus) and need compute to avoid accumulated errors. | Better no doc than bad doc. Drift detection is mandatory, not optional. |
+| Injected context is loaded every session, and a wrong note gets carried into every session. | Root `CLAUDE.md` stays short; detail lives in lazily loaded `docs/*.md`. |
+| Concentrate re-verification on volatile information. | Promote rules and traps; leave status in work files. |
+| Give each shared page a single writer. | Git + PR review. |
+
+**Status rots; rules age well.** A hand-run prune of a 162-file project memory (down to 123) found almost nothing worth dropping. What had gone bad was status: notes that contradicted later notes, and one large note that had become a stale copy of the repo, with an obsolete instruction a few paragraphs from the rule it violated. Short rule-shaped notes ("never do X", "this looks like Y but is Z") were still correct months later. Promote that kind of note. Leave status where it is.
 
 ---
 
 ## How they interact
 
-Context Tree treats auto-memory as a **read-only signal source**. The `memory-promoter` skill scans `~/.claude/projects/<proj>/memory/` for entries whose *content* belongs in the committed Context Tree (typically `feedback`, `project`, or `reference` typed memories that describe code rather than the user).
-
-This is the natural answer to the Rule of Two problem. Auto-memory is already capturing things Claude found noteworthy — Context Tree's job is to **promote** the signal that has stabilized, after verifying it against code, into the team-shared layer.
+Context Tree treats auto-memory as a **read-only signal source**. Dreaming keeps memory consistent; Context Tree promotes what has stabilized up into the repo after checking it against code.
 
 **Promotion mapping** (auto-memory type → likely Context Tree home):
 
 | Auto-memory type | Promote to | Notes |
 |---|---|---|
 | `user` | **Stay in memory** | About the human, never about the codebase |
-| `feedback` | Root `CLAUDE.md` (working preferences) | Only if generalizable beyond one user |
-| `project` | `BUSINESS_CONTEXT.md` / `TROUBLESHOOTING.md` | Project context, ongoing work |
+| `feedback` | Root `CLAUDE.md` (working preferences) | Only if correct for any teammate |
+| `project` | `TROUBLESHOOTING.md` / `BUSINESS_CONTEXT.md` | Traps and decisions, not status |
 | `reference` | `GLOSSARY.md` / `ARCHITECTURE.md` / `AI_STRATEGIES.md` | Pointers, terminology, patterns |
 
-Critical rule: **Context Tree never writes to auto-memory.** Anthropic owns that surface. We read; we promote up; we leave it alone.
+**Critical rule: Context Tree never writes to auto-memory.** When a promotion run finds a memory that the code contradicts, it reports it to the user. Fixing it is the user's call, or dreaming's.
 
 ---
 
-## What Context Tree borrows from auto-memory
+## Skill status after dreaming
 
-Anthropic's design choices for auto-memory are good, and Context Tree adopts the ones that fit:
-
-- **Frontmatter convention** — `name`, `description`, `type` fields on each doc make purpose explicit and machine-readable
-- **Index file** — Auto-memory's `MEMORY.md` is the conceptual cousin of Context Tree's `knowledge.yaml` (KCP manifest). Both are routing layers; ours is richer because Context Tree docs are bigger and need triggers/decision trees
-- **Topic files load on-demand** — Auto-memory keeps `MEMORY.md` short and lazy-loads topic files. Context Tree's CLAUDE.md (under 200 lines) plus separate `docs/*.md` follows the same shape
-
-What Context Tree keeps separate:
-
-- **Vocabulary** — Auto-memory's `user/feedback/project/reference` types and Context Tree's doc names (`GLOSSARY/ARCHITECTURE/BUSINESS_CONTEXT/...`) are orthogonal axes. Auto-memory's types describe *who/what the knowledge serves*; Context Tree's doc names describe *content domain*. Both vocabularies stay; we just map between them.
-- **Verification discipline** — Anthropic doesn't require it; Context Tree does. This is the central differentiator.
-- **Scope** — Auto-memory is local; Context Tree is committed. Don't blur this.
+| Skill | Overlap with dreaming | Status |
+|---|---|---|
+| `drift-detector` | None. Verifies docs against code. | **Core.** This is the differentiator. |
+| `memory-promoter` | Partial. Dreaming curates memory; it doesn't verify against code or write to the repo. | **Keep, narrowed** to verify-and-promote. No memory hygiene. |
+| `tree-health` | Low. Dreaming repairs links in memory wikis, not repo docs. | Keep. Cheap structural check. |
+| `rule-of-two-detector` | Partial. Dreaming finds repeated mistakes across *your sessions*; this reads *the team's git history*. | Keep for team signal. |
+| `learning-capture` | High for Proactive Capture: in-session note writing plus dreaming covers it. Learning Review (from git) is distinct. | Retire the in-flow nudge; keep Learning Review, or fold it into `rule-of-two-detector`. |
 
 ---
 
@@ -75,21 +99,24 @@ What Context Tree keeps separate:
 You learn something new during work.
 
 ├─ Is it about you (your preferences, your machine)?
-│  └─ Auto-memory handles it. Done.
+│  └─ Auto-memory handles it; dreaming keeps it current. Done.
+│
+├─ Is it status (blocked on X, next step is Y)?
+│  └─ Work file in the repo (NEXT-SESSION, README). Not memory, not the tree.
 │
 ├─ Is it true about the codebase?
 │  ├─ Verified against code?
-│  │  ├─ Yes, and you've hit it twice (Rule of Two)?
+│  │  ├─ Yes, and it's a rule or trap that will matter again?
 │  │  │  └─ Context Tree. Add 2-3 lines to the right doc.
 │  │  ├─ Yes, but only seen once?
 │  │  │  └─ Let auto-memory hold it. Promote later if it recurs.
 │  │  └─ No, can't verify?
-│  │     └─ Don't write it down. Bad context is worse than bad code.
+│  │     └─ Don't commit it. Bad context is worse than bad code.
 │  └─ Unsure if it's still true?
-│     └─ Verify first. If stale, fix the source (code or doc).
+│     └─ Verify against code first. If stale, fix the source (code or doc).
 │
 └─ Is it about an external system or process?
-   └─ Context Tree if team needs it (reference type → AI_STRATEGIES.md or similar).
+   └─ Context Tree if the team needs it (AI_STRATEGIES.md or similar).
       Auto-memory if just for you.
 ```
 
@@ -97,14 +124,14 @@ You learn something new during work.
 
 ## For maintainers of this plugin
 
-When designing new Context Tree features, ask: *does auto-memory already do this?*
+Before adding a feature, ask: *do auto-memory or dreaming already do this?*
 
-- If yes, and Anthropic does it well → don't reimplement. Read from it instead.
-- If yes, but auto-memory's version lacks verification or team scope → that's the Context Tree opportunity.
+- If yes → don't build it. Read from memory instead.
+- If yes, but without code verification or team scope → that's the Context Tree opportunity.
 - If no → that's the Context Tree opportunity.
 
-The plugin's value is **everything auto-memory structurally cannot do**: verification against code, team sharing via git, quality gates that reject bad context, and the domain expert interview that captures institutional knowledge AI cannot infer.
+The plugin's value is what Anthropic's memory structurally cannot do: **verify against code, share through git, reject bad context at review, and capture institutional knowledge through the domain expert interview.**
 
 ---
 
-*Document established: 2026-05-01 (v4.0.0). Reflects Claude Code memory feature as of v2.1.59+.*
+*Established 2026-05-01 (v4.0.0). Revised 2026-11-06 for dreaming, per Anthropic's "Components of agent memory."*
