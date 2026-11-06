@@ -89,7 +89,7 @@ Context Tree treats auto-memory as a **read-only signal source**. Dreaming keeps
 | `memory-promoter` | Partial. Dreaming curates memory; it doesn't verify against code or write to the repo. | **Keep, narrowed** to verify-and-promote. No memory hygiene. |
 | `tree-health` | Low. Dreaming repairs links in memory wikis, not repo docs. | Keep. Cheap structural check. |
 | `rule-of-two-detector` | Partial. Dreaming finds repeated mistakes across *your sessions*; this reads *the team's git history*. | Keep for team signal. |
-| `learning-capture` | High for Proactive Capture: in-session note writing plus dreaming covers it. Learning Review (from git) is distinct. | Retire the in-flow nudge; keep Learning Review, or fold it into `rule-of-two-detector`. |
+| `learning-capture` | High for Proactive Capture: in-session note writing plus dreaming covers it. Learning Review (from git) is distinct. | In-flow nudge **retired in v4.1.0**. Learning Review kept; still flags Context Tree docs that work shows are wrong. |
 
 ---
 

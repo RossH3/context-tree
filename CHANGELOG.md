@@ -5,9 +5,18 @@ All notable changes to the Context Tree project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.1.0] - 2026-11-06
 
-### Changed: reframed around dreaming (docs only)
+### Removed
+
+- **`learning-capture` Proactive Capture (in-flow nudge).** Claude no longer offers to file insights mid-session. Auto-memory captures session insights and dreaming curates them; the nudge competed with both. Stable insights reach the tree through `memory-promoter`, with code verification. The skill description no longer triggers on general debugging or synthesis moments.
+
+### Kept
+
+- **Learning Review** (git history) is unchanged.
+- **Doc contradictions:** when work shows a Context Tree doc is wrong, `learning-capture` still flags it and offers a fix. Dreaming corrects memory, not committed docs, so nothing else catches this.
+
+### Changed: reframed around dreaming
 
 Anthropic's [Components of agent memory](https://www.anthropic.com/research/components-of-agent-memory) describes dreaming: an offline pass that reorganizes memory, checks notes against session transcripts, and finds patterns across sessions. That is the curation work Context Tree had been doing by hand, so the plugin no longer treats memory upkeep as a gap to fill.
 
@@ -17,10 +26,8 @@ Anthropic's [Components of agent memory](https://www.anthropic.com/research/comp
 
 ### Recommended, not yet applied
 
-- Retire `learning-capture`'s proactive in-flow nudge; auto-memory plus dreaming cover it. Keep Learning Review (git history), or fold it into `rule-of-two-detector`.
 - Keep `memory-promoter` scoped to verify-and-promote. No memory hygiene.
-
-No skill, command, or plugin version changes in this entry.
+- Consider folding Learning Review into `rule-of-two-detector`.
 
 ---
 

@@ -304,25 +304,19 @@ Process post-mortems, Slack exports, meeting notes, or any document. Each insigh
 /maintain-context-tree
 ```
 
-**Five options:**
+**Six options:**
 1. **Git Learning Analysis** - Detect repeated patterns from git history (Rule of Two violations)
 2. **Quality Audit** - Validate claims against code, prune stale content
 3. **Health Check** - Quick validation of links, structure, file sizes
 4. **Learning Review** - Harvest undocumented learnings from recent git commits
-5. **All** - Run options 1-4 in sequence (monthly maintenance)
+5. **Memory Promoter** - Verify auto-memory entries against code, promote stable ones to the tree
+6. **All** - Run options 1-5 in sequence (monthly maintenance)
 
-### Proactive Capture (Automatic)
+### Session Insights
 
-During normal work, when you and Claude produce a non-obvious synthesis (tracing a bug through multiple files, discovering how subsystems interact), Claude offers to capture it:
+Context Tree no longer offers to file insights mid-session; the Proactive Capture nudge was retired in v4.1.0. Auto-memory captures session insights and dreaming curates them. Run `memory-promoter` (option 5 of `/maintain-context-tree`) to verify the stable ones against code and promote them into the tree.
 
-```
-I traced this through 4 files -- this interaction isn't documented.
-Want me to file it into ARCHITECTURE.md? (y/n)
-```
-
-Lightweight, easy to dismiss, ensures valuable insights don't evaporate into chat history.
-
-> **Note:** This in-flow nudge overlaps with auto-memory and dreaming, which already capture and curate session insights. It is still active in v4.0.1 but recommended for retirement; promote stabilized insights with `memory-promoter` instead. See [RELATIONSHIP_TO_MEMORY.md](RELATIONSHIP_TO_MEMORY.md#skill-status-after-dreaming).
+One exception: if work shows a Context Tree doc is wrong, Claude flags it and offers a fix, since dreaming corrects memory, not committed docs.
 
 ### Natural Capture
 

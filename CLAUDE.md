@@ -50,7 +50,7 @@ See `RELATIONSHIP_TO_MEMORY.md` for the full mapping.
 - `rule-of-two-detector` — Detects repeated patterns in git history (was Mode 1)
 - `drift-detector` — Validates doc claims against code, prunes stale content (was Mode 2)
 - `tree-health` — Link/structure/size validation (was Mode 3)
-- `learning-capture` — Harvests undocumented learnings + proactive capture during work (was Mode 4 + nudge). Proactive in-flow nudge overlaps with dreaming; recommended for retirement, not yet removed
+- `learning-capture` — Harvests undocumented learnings from git history (was Mode 4); flags Context Tree docs that work shows are wrong. Proactive in-flow nudge retired in v4.1.0 (overlapped with dreaming)
 - `memory-promoter` — **NEW v4** — Reads auto-memory, verifies against code, promotes signal to committed tree. Scope is verify-and-promote only; no memory hygiene
 
 **Utilities:**
@@ -71,7 +71,7 @@ See `RELATIONSHIP_TO_MEMORY.md` for the full mapping.
 
 plugins/context-tree/
 ├── .claude-plugin/
-│   └── plugin.json                # Plugin metadata (v4.0.1)
+│   └── plugin.json                # Plugin metadata (v4.1.0)
 ├── commands/
 │   ├── build-context-tree.md      # Main 3-phase orchestrator
 │   ├── maintain-context-tree.md   # Thin orchestrator -> maintenance skills
@@ -82,7 +82,7 @@ plugins/context-tree/
 │   ├── rule-of-two-detector/      # Git pattern detection
 │   ├── drift-detector/            # Doc claims vs code validation
 │   ├── tree-health/               # Structure/link/size checks
-│   ├── learning-capture/          # Recent learnings + proactive nudge
+│   ├── learning-capture/          # Recent learnings from git + doc contradictions
 │   └── memory-promoter/           # Auto-memory -> committed tree (NEW v4)
 └── git-learning-detector.sh       # Utility script
 ```
@@ -106,12 +106,12 @@ From 9+ months of production experimentation:
 
 ## Development Notes
 
-**Post-dreaming reframe (unreleased, docs only):**
+**V4.1 (current release): post-dreaming reframe**
 - `RELATIONSHIP_TO_MEMORY.md` rewritten around dreaming: transcripts vs. code as ground truth, team scope, the interview
-- Per-skill overlap table: `drift-detector` core; `memory-promoter` narrowed; `learning-capture` in-flow nudge recommended for retirement
-- No skill or command files changed yet
+- Per-skill overlap table: `drift-detector` core; `memory-promoter` narrowed
+- `learning-capture` proactive in-flow nudge retired; Learning Review and doc-contradiction flagging kept
 
-**V4 (current release):**
+**V4:**
 - Reframed around Anthropic's auto-memory: Context Tree = committed/verified/team-shared layer
 - New `memory-promoter` skill: scans `~/.claude/projects/<proj>/memory/` (read-only) for promotion candidates
 - Refactored unified maintenance skill into 5 composable skills

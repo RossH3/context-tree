@@ -1,22 +1,19 @@
 ---
 name: learning-capture
-description: Capture undocumented learnings into the Context Tree - either by reviewing recent git commits (Learning Review mode) or by offering proactive capture during normal work when a non-obvious synthesis is produced. Use when reviewing recent development for missed insights, or naturally during a session when a debugging discovery, architectural realization, or non-obvious cross-file synthesis happens. Also activates as part of /maintain-context-tree.
+description: Harvest undocumented learnings from recent git history into the Context Tree (Learning Review). Use when reviewing recent development for missed insights, or as part of /maintain-context-tree. Also use when a session shows that an existing Context Tree doc is wrong.
 ---
 
 # Learning Capture
 
 ## Purpose
 
-Knowledge compounds when captured. Two modes:
+Knowledge compounds when captured. This skill reviews recent git history for learnings that never made it into the Context Tree, verifies them against code, and offers to file them.
 
-1. **Learning Review** (batch) — Harvest learnings from recent git history that didn't get documented in real time
-2. **Proactive Capture** (in-flow) — During normal work, offer a gentle nudge to file non-obvious synthesis before it evaporates into chat history
-
-This skill does both. The user invokes it via `/maintain-context-tree` for batch mode; it activates implicitly during work for proactive mode.
+**What this skill no longer does:** the in-session "want me to file this?" nudge (Proactive Capture) was retired in v4.1.0. Auto-memory captures session insights and dreaming curates them; offering to file each one competed with both. Insights that stabilize in memory reach the tree through `memory-promoter`, with code verification.
 
 ---
 
-## Mode 1: Learning Review (Batch)
+## Learning Review
 
 ### Execution
 
@@ -36,7 +33,7 @@ This skill does both. The user invokes it via `/maintain-context-tree` for batch
 3. **For each detected learning:**
    - **Summarize** what was learned (read the diff if needed)
    - **Check docs** — Already in Context Tree? Search CLAUDE.md and docs/
-   - **Assess value** — Would this prevent confusion for future devs/AI?
+   - **Assess value** — Would this prevent confusion for future devs/AI? Prefer rules and traps over status
    - **If undocumented and valuable** — Draft, verify against current code, present
 
 4. **Present recommendations one at a time:**
@@ -65,43 +62,18 @@ This skill does both. The user invokes it via `/maintain-context-tree` for batch
 
 ---
 
-## Mode 2: Proactive Capture (In-Flow)
+## Doc Contradictions During Work
 
-### When to offer
+The one in-session behavior that stays. Dreaming corrects memory, not committed docs, so nothing else catches a Context Tree doc that the code now contradicts.
 
-During normal work, offer to capture when:
-- Your answer required reading 3+ files to synthesize
-- The user expressed surprise ("oh, THAT's how it works")
-- You corrected your own initial assumption ("actually, it's not X, it's Y")
-- Your answer contradicts existing docs (fix the doc!)
-- A debugging session revealed non-obvious system behavior
-
-### When NOT to offer
-
-- Single-file, obvious patterns
-- Already-documented insights
-- Too task-specific to be reusable
-- User is clearly focused/in a hurry (read the room)
-- You've already offered once this session and they declined
-
-### Format — keep it to one sentence
+When work shows that a Context Tree doc is wrong, say so in one sentence and offer a fix:
 
 ```
-I traced this through 4 files — this interaction isn't documented.
-Want me to file it into ARCHITECTURE.md? (y/n)
+docs/ARCHITECTURE.md says sessions live in Redis; config/session.js:8 uses cookies.
+Want me to fix the doc? (y/n)
 ```
 
-### If they say yes
-
-1. Verify the insight against code (same discipline)
-2. Draft 2-5 lines for appropriate doc and section
-3. Show draft and target location
-4. Apply only after approval
-5. Commit: `docs: capture [insight] from development session`
-
-### If they say no
-
-Move on immediately. Don't explain why you offered.
+On yes: verify, draft the correction, show it, apply only after approval. On no: move on. For a broad audit, use `drift-detector`.
 
 ---
 
@@ -119,8 +91,8 @@ Use both. They cover different time horizons and different signals.
 - **Verify against code** — every captured learning is verified before it lands
 - **Signal-to-noise** — 2-5 lines max per learning; expand only if cross-cutting
 - **Single source of truth** — consolidate; don't fragment a topic across docs
-- **Read the room** for proactive mode — easy to dismiss, never insistent
+- **Rules and traps, not status** — status rots; leave it in work files
 
 ---
 
-**Run when:** `/maintain-context-tree` (option 4 / Learning Review), or implicitly during normal work when a capture-worthy moment occurs.
+**Run when:** `/maintain-context-tree` (option 4 / Learning Review), or when a session shows a Context Tree doc is wrong.

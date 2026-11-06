@@ -100,7 +100,7 @@ When the user says something like:
 
 > "I just figured out webhooks use HMAC auth, not bearer tokens. Should we document this?"
 
-Respond naturally — don't make them pick a menu option. Verify against code, draft 2-5 lines, show the target location, apply on approval. The `learning-capture` skill's proactive-capture mode covers this implicitly during normal work.
+Respond naturally — don't make them pick a menu option. Verify against code, draft 2-5 lines, show the target location, apply on approval. Don't offer unprompted capture during normal work; auto-memory and dreaming handle session insights, and `memory-promoter` brings the stable ones into the tree.
 
 ---
 
